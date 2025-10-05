@@ -8,8 +8,8 @@ serde.workspace = true
 uuid.workspace = true
 anyhow.workspace = true
 config.workspace = true
+shared.workspace = true
 
 domain = { path = "../domain" }
 
 [dev-dependencies]
-serial_test.workspace = true

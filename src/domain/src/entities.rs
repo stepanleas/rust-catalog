@@ -1,4 +1,4 @@
-use crate::value_objects::Money;
+use shared::domain::value_objects::Money;
 use uuid::Uuid;
 
 pub struct Category {

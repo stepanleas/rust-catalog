@@ -1,5 +1,6 @@
 use crate::CategoryDto;
-use domain::{Money, Product};
+use domain::Product;
+use shared::domain::value_objects::Money;
 use uuid::Uuid;
 
 pub struct ProductDto {

@@ -2,7 +2,8 @@ use crate::product::commands::{CreateProductCommand, DeleteProductCommand, Updat
 use crate::product::dtos::ProductDto;
 use crate::product::repositories::ProductRepository;
 use crate::{CategoryRepository, FindProductQuery};
-use domain::{Money, Product};
+use domain::Product;
+use shared::domain::value_objects::Money;
 use std::sync::Arc;
 
 pub struct FindProductQueryHandler {

@@ -5,7 +5,8 @@ use crate::schema::categories::id;
 use application::CategoryRepository;
 use diesel::ExpressionMethods;
 use diesel::{OptionalExtension, QueryDsl, RunQueryDsl};
-use domain::{Category, DomainError};
+use domain::Category;
+use shared::domain::error::DomainError;
 use uuid::Uuid;
 
 pub struct PostgresCategoryRepository {
