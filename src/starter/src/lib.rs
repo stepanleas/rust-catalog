@@ -8,7 +8,6 @@ use infrastructure::{PostgresCategoryRepository, PostgresProductRepository};
 use log::{debug, info};
 use presentation::AppState;
 use std::sync::Arc;
-use utoipa::OpenApi;
 use utoipa_actix_web::AppExt;
 use utoipa_swagger_ui::SwaggerUi;
 
@@ -32,7 +31,7 @@ async fn run_internal(settings: &Settings) -> Result<Server> {
     let server = HttpServer::new(move || {
         App::new()
             .into_utoipa_app()
-            .openapi(presentation::ApiDoc::openapi())
+            .openapi(presentation::open_api_docs())
             .map(|app| app.wrap(Logger::default()))
             .map(|app| app.configure(presentation::configure))
             .openapi_service(|api| {

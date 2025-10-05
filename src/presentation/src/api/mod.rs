@@ -1,11 +1,9 @@
 mod api_categories;
-mod api_doc;
 mod api_health_check;
 mod api_products;
 
 mod api_info;
-
-pub use api_doc::ApiDoc;
+pub mod docs;
 
 pub use api_categories::create as create_category;
 pub use api_categories::delete as delete_category;
