@@ -3,7 +3,7 @@ mod api_health_check;
 mod api_products;
 
 mod api_info;
-mod docs;
+pub mod docs;
 
 pub use api_categories::create as create_category;
 pub use api_categories::delete as delete_category;
@@ -22,4 +22,3 @@ pub use api_health_check::ready;
 pub use api_health_check::startup;
 
 pub use api_info::info;
-pub use docs::api_doc;

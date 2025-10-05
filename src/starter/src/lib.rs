@@ -31,7 +31,7 @@ async fn run_internal(settings: &Settings) -> Result<Server> {
     let server = HttpServer::new(move || {
         App::new()
             .into_utoipa_app()
-            .openapi(presentation::api_doc())
+            .openapi(presentation::open_api_docs())
             .map(|app| app.wrap(Logger::default()))
             .map(|app| app.configure(presentation::configure))
             .openapi_service(|api| {

@@ -6,6 +6,6 @@ mod requests;
 mod responses;
 mod validation;
 
+pub use api::docs::open_api_docs;
 pub use app_state::AppState;
 pub use config::configure;
-pub use api::api_doc;

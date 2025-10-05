@@ -4,7 +4,7 @@ use crate::api::docs::product_api_doc::ProductApiDoc;
 use utoipa::OpenApi;
 use utoipa::openapi::OpenApi as OpenApiStruct;
 
-pub fn api_doc() -> OpenApiStruct {
+pub fn open_api_docs() -> OpenApiStruct {
     let mut openapi = ProductApiDoc::openapi();
 
     openapi.merge(CategoryApiDoc::openapi());
