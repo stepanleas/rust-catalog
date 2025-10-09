@@ -65,11 +65,11 @@ impl UpdateCategoryCommandHandler {
 
     pub async fn execute(&self, command: UpdateCategoryCommand) -> anyhow::Result<CategoryDto> {
         self.repository
-            .save(Category {
-                id: command.id,
-                title: command.title,
-                description: command.description,
-            })
+            .save(Category::new_with_id(
+                command.id(),
+                command.title().into(),
+                command.description().into(),
+            ))
             .map(CategoryDto::from)
     }
 }

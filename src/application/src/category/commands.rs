@@ -12,9 +12,9 @@ impl CreateCategoryCommand {
 }
 
 pub struct UpdateCategoryCommand {
-    pub id: Uuid,
-    pub title: String,
-    pub description: String,
+    id: Uuid,
+    title: String,
+    description: String,
 }
 
 impl UpdateCategoryCommand {
@@ -24,6 +24,18 @@ impl UpdateCategoryCommand {
             title,
             description,
         }
+    }
+
+    pub fn id(&self) -> Uuid {
+        self.id
+    }
+
+    pub fn title(&self) -> &str {
+        &self.title
+    }
+
+    pub fn description(&self) -> &str {
+        &self.description
     }
 }
 

@@ -55,13 +55,13 @@ impl CreateProductCommandHandler {
     }
 
     pub async fn execute(&self, command: CreateProductCommand) -> anyhow::Result<ProductDto> {
-        let category = self.category_repository.find_by_id(command.category_id)?;
-        let price = Money::from_f64(command.price)?;
+        let category = self.category_repository.find_by_id(command.category_id())?;
+        let price = Money::from_f64(command.price())?;
 
         let product = Product::new(
-            command.title,
-            command.description,
-            command.quantity,
+            command.title().into(),
+            command.description().into(),
+            command.quantity(),
             price,
             category,
         );
@@ -87,18 +87,18 @@ impl UpdateProductCommandHandler {
     }
 
     pub async fn execute(&self, command: UpdateProductCommand) -> anyhow::Result<ProductDto> {
-        let category = self.category_repository.find_by_id(command.category_id)?;
-        let price = Money::from_f64(command.price)?;
+        let category = self.category_repository.find_by_id(command.category_id())?;
+        let price = Money::from_f64(command.price())?;
 
         self.product_repository
-            .save(Product {
-                id: command.id,
-                title: command.title,
-                description: command.description,
-                quantity: command.quantity,
+            .save(Product::new_with_id(
+                command.id(),
+                command.title().into(),
+                command.description().into(),
+                command.quantity(),
                 price,
                 category,
-            })
+            ))
             .map(ProductDto::from)
     }
 }

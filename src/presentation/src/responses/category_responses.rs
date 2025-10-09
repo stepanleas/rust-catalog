@@ -14,9 +14,9 @@ pub struct CategoryResponse {
 impl From<CategoryDto> for CategoryResponse {
     fn from(category: CategoryDto) -> Self {
         Self {
-            id: category.id,
-            title: category.title,
-            description: category.description,
+            id: category.id(),
+            title: category.title().into(),
+            description: category.description().into(),
         }
     }
 }

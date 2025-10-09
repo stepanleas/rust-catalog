@@ -13,7 +13,6 @@ uuid.workspace = true
 utoipa.workspace = true
 thiserror.workspace = true
 anyhow.workspace = true
-shared.workspace = true
 
 application = { path = "../application" }
 domain = { path = "../domain" }

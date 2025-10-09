@@ -18,12 +18,12 @@ pub struct ProductResponse {
 impl From<ProductDto> for ProductResponse {
     fn from(product: ProductDto) -> Self {
         Self {
-            id: product.id,
-            title: product.title,
-            description: product.description,
-            quantity: product.quantity,
-            price: product.price.value().to_string(),
-            category: product.category.into(),
+            id: product.id(),
+            title: product.title().into(),
+            description: product.description().into(),
+            quantity: product.quantity(),
+            price: product.price().clone().value().to_string(),
+            category: product.category().clone().into(),
         }
     }
 }

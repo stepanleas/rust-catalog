@@ -5,4 +5,5 @@ edition = "2024"
 
 [dependencies]
 uuid.workspace = true
+thiserror.workspace = true
 shared.workspace = true
