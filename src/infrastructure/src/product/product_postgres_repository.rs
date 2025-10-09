@@ -7,8 +7,7 @@ use crate::product::entity::ProductEntity;
 use application::ProductRepository;
 use diesel::{ExpressionMethods, SelectableHelper};
 use diesel::{OptionalExtension, QueryDsl, RunQueryDsl};
-use domain::Product;
-use shared::domain::error::DomainError;
+use domain::{DomainError, Product};
 use uuid::Uuid;
 
 pub struct PostgresProductRepository {
@@ -32,7 +31,7 @@ impl ProductRepository for PostgresProductRepository {
 
         Ok(results
             .into_iter()
-            .map(|(product_entity, category_entity)| product_entity.into(category_entity))
+            .map(|(product_entity, category_entity)| product_entity.into_domain(category_entity))
             .collect())
     }
 
@@ -47,7 +46,7 @@ impl ProductRepository for PostgresProductRepository {
             .optional()?
             .ok_or(DomainError::NotFound { id: entity_id })?;
 
-        Ok(product_entity.into(category_entity))
+        Ok(product_entity.into_domain(category_entity))
     }
 
     fn save(&self, entity: Product) -> anyhow::Result<Product> {
@@ -59,14 +58,14 @@ impl ProductRepository for PostgresProductRepository {
             .on_conflict(crate::schema::products::id)
             .do_update()
             .set(&persistent_entity)
-            .returning(ProductEntity::as_returning()) // ✅ only return from products
+            .returning(ProductEntity::as_returning())
             .get_result::<ProductEntity>(&mut connection)?;
 
         let category_entity = categories
-            .find(product_entity.category_id)
+            .find(product_entity.category_id())
             .first::<CategoryEntity>(&mut connection)?;
 
-        Ok(product_entity.into(category_entity))
+        Ok(product_entity.into_domain(category_entity))
     }
 
     fn delete(&self, entity_id: Uuid) -> anyhow::Result<()> {

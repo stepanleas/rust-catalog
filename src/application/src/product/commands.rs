@@ -1,11 +1,11 @@
 use uuid::Uuid;
 
 pub struct CreateProductCommand {
-    pub title: String,
-    pub description: String,
-    pub quantity: i32,
-    pub price: f64,
-    pub category_id: Uuid,
+    title: String,
+    description: String,
+    quantity: i32,
+    price: f64,
+    category_id: Uuid,
 }
 
 impl CreateProductCommand {
@@ -26,13 +26,61 @@ impl CreateProductCommand {
     }
 }
 
+impl CreateProductCommand {
+    pub fn title(&self) -> &str {
+        &self.title
+    }
+
+    pub fn description(&self) -> &str {
+        &self.description
+    }
+
+    pub fn quantity(&self) -> i32 {
+        self.quantity
+    }
+
+    pub fn price(&self) -> f64 {
+        self.price
+    }
+
+    pub fn category_id(&self) -> Uuid {
+        self.category_id
+    }
+}
+
 pub struct UpdateProductCommand {
-    pub id: Uuid,
-    pub title: String,
-    pub description: String,
-    pub quantity: i32,
-    pub price: f64,
-    pub category_id: Uuid,
+    id: Uuid,
+    title: String,
+    description: String,
+    quantity: i32,
+    price: f64,
+    category_id: Uuid,
+}
+
+impl UpdateProductCommand {
+    pub fn id(&self) -> Uuid {
+        self.id
+    }
+
+    pub fn title(&self) -> &str {
+        &self.title
+    }
+
+    pub fn description(&self) -> &str {
+        &self.description
+    }
+
+    pub fn quantity(&self) -> i32 {
+        self.quantity
+    }
+
+    pub fn price(&self) -> f64 {
+        self.price
+    }
+
+    pub fn category_id(&self) -> Uuid {
+        self.category_id
+    }
 }
 
 impl UpdateProductCommand {

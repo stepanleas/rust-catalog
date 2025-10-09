@@ -2,7 +2,7 @@ use crate::responses::ErrorResponse;
 use crate::validation::ValidationFieldError;
 use actix_web::{HttpResponse, ResponseError, http::StatusCode};
 use anyhow::Error as AnyhowError;
-use shared::domain::error::DomainError;
+use domain::DomainError;
 use thiserror::Error;
 use validator::ValidationErrors;
 

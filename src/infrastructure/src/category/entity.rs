@@ -7,19 +7,19 @@ use uuid::Uuid;
 #[diesel(table_name = crate::schema::categories)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub(crate) struct CategoryEntity {
-    pub id: Uuid,
-    pub title: String,
-    pub description: String,
-    pub created_at: NaiveDateTime,
-    pub updated_at: NaiveDateTime,
+    id: Uuid,
+    title: String,
+    description: String,
+    created_at: NaiveDateTime,
+    updated_at: NaiveDateTime,
 }
 
 impl From<Category> for CategoryEntity {
-    fn from(ticket: Category) -> Self {
+    fn from(category: Category) -> Self {
         CategoryEntity {
-            id: ticket.id,
-            title: ticket.title,
-            description: ticket.description,
+            id: category.id(),
+            title: category.title().into(),
+            description: category.description().into(),
             created_at: chrono::Utc::now().naive_utc(),
             updated_at: chrono::Utc::now().naive_utc(),
         }
@@ -28,10 +28,6 @@ impl From<Category> for CategoryEntity {
 
 impl Into<Category> for CategoryEntity {
     fn into(self) -> Category {
-        Category {
-            id: self.id,
-            title: self.title,
-            description: self.description,
-        }
+        Category::new_with_id(self.id, self.title, self.description)
     }
 }

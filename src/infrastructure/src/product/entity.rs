@@ -13,38 +13,42 @@ use uuid::Uuid;
 #[diesel(table_name = crate::schema::products)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub(crate) struct ProductEntity {
-    pub id: Uuid,
-    pub title: String,
-    pub description: String,
-    pub quantity: i32,
-    pub price: BigDecimal,
-    pub category_id: Uuid,
-    pub created_at: NaiveDateTime,
-    pub updated_at: NaiveDateTime,
+    id: Uuid,
+    category_id: Uuid,
+    title: String,
+    description: String,
+    quantity: i32,
+    price: BigDecimal,
+    created_at: NaiveDateTime,
+    updated_at: NaiveDateTime,
 }
 
 impl ProductEntity {
-    pub fn into(self, category_entity: CategoryEntity) -> Product {
-        Product {
-            id: self.id,
-            title: self.title,
-            description: self.description,
-            quantity: self.quantity,
-            price: Money::new(self.price),
-            category: category_entity.into(),
-        }
+    pub fn into_domain(self, category_entity: CategoryEntity) -> Product {
+        Product::new_with_id(
+            self.id,
+            self.title,
+            self.description,
+            self.quantity,
+            Money::new(self.price),
+            category_entity.into(),
+        )
+    }
+
+    pub fn category_id(&self) -> Uuid {
+        self.category_id
     }
 }
 
 impl From<Product> for ProductEntity {
     fn from(product: Product) -> Self {
         ProductEntity {
-            id: product.id,
-            title: product.title,
-            description: product.description,
-            quantity: product.quantity,
-            price: product.price.value(),
-            category_id: product.category.id,
+            id: product.id(),
+            category_id: product.category().id(),
+            title: product.title().into(),
+            description: product.description().into(),
+            quantity: product.quantity(),
+            price: product.price().clone().value(),
             created_at: chrono::Utc::now().naive_utc(),
             updated_at: chrono::Utc::now().naive_utc(),
         }
