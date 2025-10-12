@@ -1,13 +1,23 @@
 use uuid::Uuid;
 
 pub struct CreateCategoryCommand {
-    pub title: String,
-    pub description: String,
+    title: String,
+    description: String,
 }
 
 impl CreateCategoryCommand {
     pub fn new(title: String, description: String) -> Self {
         CreateCategoryCommand { title, description }
+    }
+}
+
+impl CreateCategoryCommand {
+    pub fn title(&self) -> &str {
+        &self.title
+    }
+
+    pub fn description(&self) -> &str {
+        &self.description
     }
 }
 

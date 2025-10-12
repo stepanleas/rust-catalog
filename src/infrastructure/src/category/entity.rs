@@ -16,7 +16,7 @@ pub(crate) struct CategoryEntity {
 
 impl From<Category> for CategoryEntity {
     fn from(category: Category) -> Self {
-        CategoryEntity {
+        Self {
             id: category.id(),
             title: category.title().into(),
             description: category.description().into(),
@@ -28,6 +28,6 @@ impl From<Category> for CategoryEntity {
 
 impl Into<Category> for CategoryEntity {
     fn into(self) -> Category {
-        Category::new_with_id(self.id, self.title, self.description)
+        Category::new(self.id, self.title, self.description)
     }
 }

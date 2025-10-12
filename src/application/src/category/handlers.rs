@@ -5,6 +5,7 @@ use crate::category::queries::FindCategoryQuery;
 use crate::category::repositories::CategoryRepository;
 use domain::Category;
 use std::sync::Arc;
+use uuid::Uuid;
 
 pub struct FindCategoryQueryHandler {
     repository: Arc<dyn CategoryRepository>,
@@ -48,9 +49,13 @@ impl CreateCategoryCommandHandler {
     }
 
     pub async fn execute(&self, command: CreateCategoryCommand) -> anyhow::Result<CategoryDto> {
-        self.repository
-            .save(Category::new(command.title, command.description))
-            .map(CategoryDto::from)
+        let category = Category::builder()
+            .id(Uuid::new_v4())
+            .title(command.title())
+            .description(command.description())
+            .build();
+
+        self.repository.save(category).map(CategoryDto::from)
     }
 }
 
@@ -64,13 +69,13 @@ impl UpdateCategoryCommandHandler {
     }
 
     pub async fn execute(&self, command: UpdateCategoryCommand) -> anyhow::Result<CategoryDto> {
-        self.repository
-            .save(Category::new_with_id(
-                command.id(),
-                command.title().into(),
-                command.description().into(),
-            ))
-            .map(CategoryDto::from)
+        let category = Category::builder()
+            .id(command.id())
+            .title(command.title())
+            .description(command.description())
+            .build();
+
+        self.repository.save(category).map(CategoryDto::from)
     }
 }
 

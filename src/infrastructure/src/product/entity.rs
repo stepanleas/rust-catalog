@@ -25,7 +25,7 @@ pub(crate) struct ProductEntity {
 
 impl ProductEntity {
     pub fn into_domain(self, category_entity: CategoryEntity) -> Product {
-        Product::new_with_id(
+        Product::new(
             self.id,
             self.title,
             self.description,

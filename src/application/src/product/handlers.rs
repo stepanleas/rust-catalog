@@ -5,6 +5,7 @@ use crate::{CategoryRepository, FindProductQuery};
 use domain::Product;
 use shared::domain::value_objects::Money;
 use std::sync::Arc;
+use uuid::Uuid;
 
 pub struct FindProductQueryHandler {
     repository: Arc<dyn ProductRepository>,
@@ -58,13 +59,14 @@ impl CreateProductCommandHandler {
         let category = self.category_repository.find_by_id(command.category_id())?;
         let price = Money::from_f64(command.price())?;
 
-        let product = Product::new(
-            command.title().into(),
-            command.description().into(),
-            command.quantity(),
-            price,
-            category,
-        );
+        let product = Product::builder()
+            .id(Uuid::new_v4())
+            .title(command.title())
+            .description(command.description())
+            .quantity(command.quantity())
+            .price(price)
+            .category(category)
+            .build();
 
         self.product_repository.save(product).map(ProductDto::from)
     }
@@ -90,16 +92,16 @@ impl UpdateProductCommandHandler {
         let category = self.category_repository.find_by_id(command.category_id())?;
         let price = Money::from_f64(command.price())?;
 
-        self.product_repository
-            .save(Product::new_with_id(
-                command.id(),
-                command.title().into(),
-                command.description().into(),
-                command.quantity(),
-                price,
-                category,
-            ))
-            .map(ProductDto::from)
+        let product = Product::builder()
+            .id(command.id())
+            .title(command.title())
+            .description(command.description())
+            .quantity(command.quantity())
+            .price(price)
+            .category(category)
+            .build();
+
+        self.product_repository.save(product).map(ProductDto::from)
     }
 }
 

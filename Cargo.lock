@@ -1989,7 +1989,7 @@ dependencies = [
 [[package]]
 name = "shared"
 version = "0.1.0"
-source = "git+https://github.com/stepanleas/rust-shared.git?tag=1.3.0#9e823c63a4c8f5b14e969bc218f0ea3657d34175"
+source = "git+https://github.com/stepanleas/rust-shared.git?tag=1.3.2#b1cb6155dabdceb6b7715b3d2fa32892f96ae1a4"
 dependencies = [
  "anyhow",
  "bigdecimal",
