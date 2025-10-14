@@ -3,9 +3,8 @@ use crate::product::dtos::ProductDto;
 use crate::product::repositories::ProductRepository;
 use crate::{CategoryRepository, FindProductQuery};
 use domain::Product;
-use shared::domain::value_objects::Money;
+use shared::domain::value_objects::{Money, ProductId};
 use std::sync::Arc;
-use uuid::Uuid;
 
 pub struct FindProductQueryHandler {
     repository: Arc<dyn ProductRepository>,
@@ -60,7 +59,7 @@ impl CreateProductCommandHandler {
         let price = Money::from_f64(command.price())?;
 
         let product = Product::builder()
-            .id(Uuid::new_v4())
+            .id(ProductId::new())
             .title(command.title())
             .description(command.description())
             .quantity(command.quantity())
@@ -93,7 +92,7 @@ impl UpdateProductCommandHandler {
         let price = Money::from_f64(command.price())?;
 
         let product = Product::builder()
-            .id(command.id())
+            .id(ProductId::from_uuid(command.id()))
             .title(command.title())
             .description(command.description())
             .quantity(command.quantity())

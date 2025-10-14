@@ -1,10 +1,9 @@
 use crate::builders::{CategoryBuilder, ProductBuilder};
-use shared::domain::value_objects::Money;
-use uuid::Uuid;
+use shared::domain::value_objects::{CategoryId, Money, ProductId};
 
 #[derive(Default)]
 pub struct Category {
-    id: Uuid,
+    id: CategoryId,
     title: String,
     description: String,
 }
@@ -14,7 +13,7 @@ impl Category {
         CategoryBuilder::default()
     }
 
-    pub fn new(id: Uuid, title: String, description: String) -> Self {
+    pub fn new(id: CategoryId, title: String, description: String) -> Self {
         Category {
             id,
             title,
@@ -22,7 +21,7 @@ impl Category {
         }
     }
 
-    pub fn id(&self) -> Uuid {
+    pub fn id(&self) -> CategoryId {
         self.id
     }
 
@@ -36,7 +35,7 @@ impl Category {
 }
 
 pub struct Product {
-    id: Uuid,
+    id: ProductId,
     title: String,
     description: String,
     quantity: i32,
@@ -50,7 +49,7 @@ impl Product {
     }
 
     pub fn new(
-        id: Uuid,
+        id: ProductId,
         title: String,
         description: String,
         quantity: i32,
@@ -67,7 +66,7 @@ impl Product {
         }
     }
 
-    pub fn id(&self) -> Uuid {
+    pub fn id(&self) -> ProductId {
         self.id
     }
 
