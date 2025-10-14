@@ -25,7 +25,7 @@ impl CategoryDto {
 impl From<&Category> for CategoryDto {
     fn from(category: &Category) -> Self {
         Self {
-            id: category.id(),
+            id: category.id().into(),
             title: category.title().into(),
             description: category.description().into(),
         }
@@ -35,7 +35,7 @@ impl From<&Category> for CategoryDto {
 impl From<Category> for CategoryDto {
     fn from(category: Category) -> Self {
         Self {
-            id: category.id(),
+            id: category.id().into(),
             title: category.title().into(),
             description: category.description().into(),
         }
