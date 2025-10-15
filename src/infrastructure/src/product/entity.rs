@@ -3,7 +3,7 @@ use chrono::NaiveDateTime;
 use diesel::internal::derives::multiconnection::bigdecimal::BigDecimal;
 use diesel::{AsChangeset, Associations, Identifiable, Insertable, Queryable, Selectable};
 use domain::Product;
-use shared::domain::value_objects::Money;
+use shared::domain::value_objects::{Money, ProductId};
 use uuid::Uuid;
 
 #[derive(
@@ -26,7 +26,7 @@ pub(crate) struct ProductEntity {
 impl ProductEntity {
     pub fn into_domain(self, category_entity: CategoryEntity) -> Product {
         Product::new(
-            self.id,
+            ProductId::from_uuid(self.id),
             self.title,
             self.description,
             self.quantity,
@@ -43,8 +43,8 @@ impl ProductEntity {
 impl From<Product> for ProductEntity {
     fn from(product: Product) -> Self {
         ProductEntity {
-            id: product.id(),
-            category_id: product.category().id(),
+            id: product.id().into(),
+            category_id: product.category().id().into(),
             title: product.title().into(),
             description: product.description().into(),
             quantity: product.quantity(),
