@@ -2068,7 +2068,6 @@ dependencies = [
  "infrastructure",
  "log",
  "presentation",
- "utoipa",
  "utoipa-actix-web",
  "utoipa-swagger-ui",
 ]
