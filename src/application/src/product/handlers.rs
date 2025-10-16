@@ -1,9 +1,8 @@
 use crate::product::commands::{CreateProductCommand, DeleteProductCommand, UpdateProductCommand};
 use crate::product::dtos::ProductDto;
+use crate::product::mappers::ProductMapper;
 use crate::product::repositories::ProductRepository;
 use crate::{CategoryRepository, FindProductQuery};
-use domain::Product;
-use shared::domain::value_objects::{Money, ProductId};
 use std::sync::Arc;
 
 pub struct FindProductQueryHandler {
@@ -56,16 +55,8 @@ impl CreateProductCommandHandler {
 
     pub async fn execute(&self, command: CreateProductCommand) -> anyhow::Result<ProductDto> {
         let category = self.category_repository.find_by_id(command.category_id())?;
-        let price = Money::from_f64(command.price())?;
-
-        let product = Product::builder()
-            .id(ProductId::new())
-            .title(command.title())
-            .description(command.description())
-            .quantity(command.quantity())
-            .price(price)
-            .category(category)
-            .build();
+        let product =
+            ProductMapper::map_create_product_command_to_domain_entity(&command, category)?;
 
         self.product_repository.save(product).map(ProductDto::from)
     }
@@ -89,16 +80,8 @@ impl UpdateProductCommandHandler {
 
     pub async fn execute(&self, command: UpdateProductCommand) -> anyhow::Result<ProductDto> {
         let category = self.category_repository.find_by_id(command.category_id())?;
-        let price = Money::from_f64(command.price())?;
-
-        let product = Product::builder()
-            .id(ProductId::from_uuid(command.id()))
-            .title(command.title())
-            .description(command.description())
-            .quantity(command.quantity())
-            .price(price)
-            .category(category)
-            .build();
+        let product =
+            ProductMapper::map_update_product_command_to_domain_entity(&command, category)?;
 
         self.product_repository.save(product).map(ProductDto::from)
     }

@@ -9,7 +9,6 @@ env_logger.workspace = true
 actix-web.workspace = true
 anyhow.workspace = true
 dotenv.workspace = true
-utoipa.workspace = true
 utoipa-actix-web.workspace = true
 utoipa-swagger-ui.workspace = true
 
