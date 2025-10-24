@@ -1,5 +1,8 @@
 DB_URL = postgres://postgres:postgres@localhost:5432/catalog_db
 
+migration:
+	diesel migration generate $(name)
+
 migrate_up:
 	diesel migration run --database-url=$(DB_URL)
 

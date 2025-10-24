@@ -17,8 +17,8 @@ pub async fn run() -> Result<Server> {
 }
 
 async fn run_internal(settings: &Settings) -> Result<Server> {
-    info!("Starting HTTP server at {}", &settings.http_url);
-    debug!("with configuration: {:?}", &settings);
+    info!("Starting HTTP server at {}", settings.http_url);
+    debug!("with configuration: {:?}", settings);
 
     let pool = infrastructure::configure(settings).await?;
 
