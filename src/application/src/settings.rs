@@ -10,6 +10,7 @@ pub struct Settings {
     pub http_url: String,
     pub service_name: String,
     pub database_url: String,
+    pub kafka_host: String,
 }
 
 impl Default for Settings {
@@ -19,6 +20,7 @@ impl Default for Settings {
             http_url: "12.0.0.1:8080".into(),
             service_name: DEFAULT_ENV_PREFIX_NAME.into(),
             database_url: "postgres://postgres:postgres@localhost:5432/catalog_db".into(),
+            kafka_host: "localhost:9092".into(),
         }
     }
 }

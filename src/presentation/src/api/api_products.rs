@@ -17,8 +17,8 @@ use uuid::Uuid;
 const PRODUCTS: &str = "Products";
 
 #[utoipa::path(
-    context_path = "/api/products",
     tag = PRODUCTS,
+    operation_id = "list_all_products",
     responses(
         (status = 200, description = "List current product items", body = [ProductResponse])
     )
@@ -41,8 +41,8 @@ pub async fn list_all(req: HttpRequest) -> Result<impl Responder, ApiError> {
 }
 
 #[utoipa::path(
-    context_path = "/api/products",
     tag = PRODUCTS,
+    operation_id = "find_product_by_id",
     responses(
         (status = 200, description = "Get product item by id", body = [ProductResponse])
     ),
@@ -66,8 +66,8 @@ pub async fn find_one(req: HttpRequest, id: Path<Uuid>) -> Result<impl Responder
 }
 
 #[utoipa::path(
-    context_path = "/api/products",
     tag = PRODUCTS,
+    operation_id = "create_product",
     responses(
         (status = 201, description = "Create a product item", body = [ProductResponse])
     ),
@@ -87,6 +87,7 @@ pub async fn create(
     let handler = CreateProductCommandHandler::new(
         state.product_repository.clone(),
         state.category_repository.clone(),
+        state.product_message_publisher.clone(),
     );
 
     let command = CreateProductCommand::new(
@@ -103,8 +104,8 @@ pub async fn create(
 }
 
 #[utoipa::path(
-    context_path = "/api/products",
     tag = PRODUCTS,
+    operation_id = "update_product",
     responses(
         (status = 200, description = "Update a product item", body = [ProductResponse])
     ),
@@ -145,8 +146,8 @@ pub async fn update(
 }
 
 #[utoipa::path(
-    context_path = "/api/products",
     tag = PRODUCTS,
+    operation_id = "delete_product",
     responses(
         (status = 204, description = "Delete a product item", body = [ProductResponse])
     ),

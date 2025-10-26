@@ -1,6 +1,9 @@
 mod category;
+mod ports;
 mod product;
 mod settings;
+
+pub use ports::output::ProductMessagePublisher;
 
 pub use crate::category::repositories::CategoryRepository;
 pub use crate::product::repositories::ProductRepository;

@@ -9,7 +9,7 @@ use utoipa::OpenApi;
 #[derive(OpenApi)]
 #[openapi(
     tags(
-        (name = "Product", description = "Product management endpoints.")
+        (name = "Products", description = "Product management endpoints.")
     ),
     paths(
         list_all,

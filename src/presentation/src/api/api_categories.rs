@@ -17,8 +17,8 @@ use uuid::Uuid;
 const CATEGORIES: &str = "Categories";
 
 #[utoipa::path(
-    context_path = "/api/categories",
     tag = CATEGORIES,
+    operation_id = "list_all_categories",
     responses(
         (status = 200, description = "List current category items", body = [CategoryResponse])
     )
@@ -41,8 +41,8 @@ pub async fn list_all(req: HttpRequest) -> Result<impl Responder, ApiError> {
 }
 
 #[utoipa::path(
-    context_path = "/api/categories",
     tag = CATEGORIES,
+    operation_id = "find_category_by_id",
     responses(
         (status = 200, description = "Get category item by id", body = [CategoryResponse])
     ),
@@ -66,8 +66,8 @@ pub async fn find_one(req: HttpRequest, id: Path<Uuid>) -> Result<impl Responder
 }
 
 #[utoipa::path(
-    context_path = "/api/categories",
     tag = CATEGORIES,
+    operation_id = "create_category",
     responses(
         (status = 201, description = "Create a category item", body = [CategoryResponse])
     ),
@@ -93,8 +93,8 @@ pub async fn create(
 }
 
 #[utoipa::path(
-    context_path = "/api/categories",
     tag = CATEGORIES,
+    operation_id = "update_category",
     responses(
         (status = 200, description = "Update a category item", body = [CategoryResponse])
     ),
@@ -128,8 +128,8 @@ pub async fn update(
 }
 
 #[utoipa::path(
-    context_path = "/api/categories",
     tag = CATEGORIES,
+    operation_id = "delete_category",
     responses(
         (status = 204, description = "Delete a category item", body = [CategoryResponse])
     ),

@@ -1,7 +1,7 @@
 use crate::builders::{CategoryBuilder, ProductBuilder};
 use shared::domain::value_objects::{CategoryId, Money, ProductId};
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct Category {
     id: CategoryId,
     title: String,
@@ -34,6 +34,7 @@ impl Category {
     }
 }
 
+#[derive(Clone)]
 pub struct Product {
     id: ProductId,
     title: String,
