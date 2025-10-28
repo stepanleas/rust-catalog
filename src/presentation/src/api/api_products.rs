@@ -129,6 +129,7 @@ pub async fn update(
     let handler = UpdateProductCommandHandler::new(
         state.product_repository.clone(),
         state.category_repository.clone(),
+        state.product_message_publisher.clone(),
     );
 
     let command = UpdateProductCommand::new(

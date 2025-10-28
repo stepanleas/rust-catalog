@@ -4,7 +4,7 @@ use crate::product::dtos::ProductDto;
 use crate::product::mappers::ProductMapper;
 use crate::product::repositories::ProductRepository;
 use crate::{CategoryRepository, FindProductQuery};
-use domain::ProductCreatedEvent;
+use domain::{ProductCreatedEvent, ProductUpdatedEvent};
 use std::sync::Arc;
 
 pub struct FindProductQueryHandler {
@@ -75,16 +75,19 @@ impl CreateProductCommandHandler {
 pub struct UpdateProductCommandHandler {
     category_repository: Arc<dyn CategoryRepository>,
     product_repository: Arc<dyn ProductRepository>,
+    message_publisher: Arc<dyn ProductMessagePublisher>,
 }
 
 impl UpdateProductCommandHandler {
     pub fn new(
         product_repository: Arc<dyn ProductRepository>,
         category_repository: Arc<dyn CategoryRepository>,
+        message_publisher: Arc<dyn ProductMessagePublisher>,
     ) -> Self {
         Self {
             product_repository,
             category_repository,
+            message_publisher,
         }
     }
 
@@ -93,7 +96,12 @@ impl UpdateProductCommandHandler {
         let product =
             ProductMapper::map_update_product_command_to_domain_entity(&command, category)?;
 
-        self.product_repository.save(product).map(ProductDto::from)
+        let product = self.product_repository.save(product)?;
+
+        self.message_publisher
+            .publish_updated(ProductUpdatedEvent::new(product.clone()))?;
+
+        Ok(ProductDto::from(product))
     }
 }
 

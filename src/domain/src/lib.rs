@@ -9,3 +9,4 @@ pub use entities::Category;
 pub use entities::Product;
 pub use error::DomainError;
 pub use events::ProductCreatedEvent;
+pub use events::ProductUpdatedEvent;

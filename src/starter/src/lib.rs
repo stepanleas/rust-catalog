@@ -7,7 +7,7 @@ use application::Settings;
 use infrastructure::{PostgresCategoryRepository, PostgresProductRepository};
 use kafka::client::KafkaClient;
 use log::{debug, info};
-use messaging::{KafkaProducer, ProductCreatedEventKafkaPublisher};
+use messaging::{KafkaProducer, ProductKafkaMessagePublisher};
 use presentation::AppState;
 use std::sync::Arc;
 use utoipa_actix_web::AppExt;
@@ -30,7 +30,7 @@ async fn run_internal(settings: &Settings) -> Result<Server> {
         settings: settings.clone(),
         category_repository: Arc::new(PostgresCategoryRepository::new(&pool)),
         product_repository: Arc::new(PostgresProductRepository::new(&pool)),
-        product_message_publisher: Arc::new(ProductCreatedEventKafkaPublisher::new(
+        product_message_publisher: Arc::new(ProductKafkaMessagePublisher::new(
             KafkaProducer::new(kafka_client)?,
         )),
     };

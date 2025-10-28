@@ -1,4 +1,6 @@
 http_url = '0.0.0.0:8080'
 service_name = 'catalog_api'
 
-database_url = 'postgres://postgres:postgres@catalog-db:5432/catalog_db'
+database_url = 'postgres://postgres:postgres@catalog-db/catalog_db'
+
+kafka_host = 'kafka:9092'

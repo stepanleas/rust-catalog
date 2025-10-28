@@ -8,6 +8,6 @@ pub mod schema;
 
 pub type DbPool = r2d2::Pool<ConnectionManager<PgConnection>>;
 
-pub use category::category_postgres_repository::PostgresCategoryRepository;
+pub use category::postgres_category_repository::PostgresCategoryRepository;
 pub use config::configure;
-pub use product::product_postgres_repository::PostgresProductRepository;
+pub use product::postgres_product_repository::PostgresProductRepository;

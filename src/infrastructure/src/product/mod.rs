@@ -1,2 +1,2 @@
 pub mod entity;
-pub mod product_postgres_repository;
+pub mod postgres_product_repository;

@@ -1,2 +1,2 @@
-pub mod category_postgres_repository;
 pub mod entity;
+pub mod postgres_category_repository;
