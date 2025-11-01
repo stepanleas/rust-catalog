@@ -27,8 +27,12 @@ impl From<Category> for CategoryEntity {
     }
 }
 
-impl Into<Category> for CategoryEntity {
-    fn into(self) -> Category {
-        Category::new(CategoryId::from_uuid(self.id), self.title, self.description)
+impl From<CategoryEntity> for Category {
+    fn from(entity: CategoryEntity) -> Self {
+        Category::new(
+            CategoryId::from_uuid(entity.id),
+            entity.title,
+            entity.description,
+        )
     }
 }

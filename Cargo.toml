@@ -29,7 +29,8 @@ diesel = { version = "2.3.2", features = ["postgres", "r2d2", "uuid", "chrono", 
 diesel_migrations = "2.3.0"
 
 # Logging
-log = "0.4.28"
+tracing = "0.1.41"
+tracing-actix-web = "0.7.19"
 env_logger = "0.11.8"
 
 # Configuration
@@ -50,6 +51,8 @@ serial_test = "3.2.0"
 uuid = { version = "1.18.1", features = ["v4", "serde"] }
 readonly = "0.2.13"
 chrono = { version = "0.4.42", default-features = false, features = ["clock"] }
+futures = "0.3.31"
+tokio = "1.48.0"
 
 # Messaging
 kafka = "0.10"

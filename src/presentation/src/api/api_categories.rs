@@ -4,7 +4,7 @@ use crate::requests::{CreateCategoryRequest, UpdateCategoryRequest};
 use crate::responses::CategoryResponse;
 use crate::validation::ValidatedJson;
 use actix_web::web::Path;
-use actix_web::{HttpRequest, HttpResponse, Responder, delete, get, post, put, web};
+use actix_web::{HttpMessage, HttpRequest, HttpResponse, Responder, delete, get, post, put, web};
 use anyhow::anyhow;
 use application::{
     CreateCategoryCommand, CreateCategoryCommandHandler, DeleteCategoryCommand,
@@ -12,6 +12,7 @@ use application::{
     ListAllCategoryQueryHandler, UpdateCategoryCommand, UpdateCategoryCommandHandler,
 };
 use serde_json::json;
+use tracing::info;
 use uuid::Uuid;
 
 const CATEGORIES: &str = "Categories";
@@ -78,6 +79,14 @@ pub async fn create(
     req: HttpRequest,
     request: ValidatedJson<CreateCategoryRequest>,
 ) -> Result<impl Responder, ApiError> {
+    let correlation_id = req
+        .extensions()
+        .get::<String>()
+        .cloned()
+        .unwrap_or_else(|| "unknown".to_string());
+
+    info!(%correlation_id, "Handling category create");
+
     let payload = request.into_inner();
 
     let state = req
@@ -109,6 +118,14 @@ pub async fn update(
     id: Path<Uuid>,
     request: ValidatedJson<UpdateCategoryRequest>,
 ) -> Result<impl Responder, ApiError> {
+    let correlation_id = req
+        .extensions()
+        .get::<String>()
+        .cloned()
+        .unwrap_or_else(|| "unknown".to_string());
+
+    info!(%correlation_id, "Handling category update");
+
     let payload = request.into_inner();
 
     let state = req

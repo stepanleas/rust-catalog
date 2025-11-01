@@ -1,9 +1,7 @@
-use uuid::Uuid;
-
 #[derive(Debug, thiserror::Error)]
 pub enum DomainError {
-    #[error("item with id {id} not found")]
-    NotFound { id: Uuid },
+    #[error("{message}")]
+    NotFound { message: String },
 
     #[error("invalid money value")]
     InvalidMoneyValue,

@@ -1,3 +1,5 @@
+name: build-by-branch
+
 on:
   push:
     branches:
@@ -35,13 +37,13 @@ jobs:
           components: rustfmt, clippy
 
       - name: Check code style
-        run: cargo fmt -- --check
+        run: cargo fmt --all -- --check
+
+      - name: Check code
+        run: cargo clippy --workspace --all-targets --all-features -- -D warnings
 
       - name: Build
         run: cargo build --release --all-features
 
-      - name: Check code
-        run: cargo clippy
-
       - name: Tests
-        run: cargo test
+        run: cargo test --workspace --all-features -- --nocapture

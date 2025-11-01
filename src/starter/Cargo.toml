@@ -4,9 +4,10 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-log.workspace = true
 env_logger.workspace = true
 actix-web.workspace = true
+tracing.workspace = true
+tracing-actix-web.workspace = true
 anyhow.workspace = true
 dotenv.workspace = true
 utoipa-actix-web.workspace = true

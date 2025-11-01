@@ -4,7 +4,7 @@ use uuid::Uuid;
 use validator::Validate;
 
 #[readonly::make]
-#[derive(Deserialize, Validate, ToSchema)]
+#[derive(Debug, Deserialize, Validate, ToSchema)]
 pub struct CreateProductRequest {
     #[validate(length(
         min = 1,
@@ -27,7 +27,7 @@ pub struct CreateProductRequest {
 }
 
 #[readonly::make]
-#[derive(Deserialize, Validate, ToSchema)]
+#[derive(Debug, Deserialize, Validate, ToSchema)]
 pub struct UpdateProductRequest {
     #[validate(length(
         min = 1,

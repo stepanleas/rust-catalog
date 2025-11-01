@@ -1,11 +1,11 @@
 use crate::kafka::avro::{
-    AvroSerializable, ProductCreatedEventAvroModel, ProductUpdatedEventAvroModel,
+    AvroSerializable, ProductCreatedEventAvroModel, ProductDeletedEventAvroModel,
+    ProductUpdatedEventAvroModel,
 };
 use crate::kafka::producer::KafkaProducer;
 use anyhow::anyhow;
 use application::ProductMessagePublisher;
-use domain::{ProductCreatedEvent, ProductUpdatedEvent};
-use log::{error, info};
+use domain::{ProductCreatedEvent, ProductDeletedEvent, ProductUpdatedEvent};
 use std::sync::Mutex;
 
 pub struct ProductKafkaMessagePublisher {
@@ -37,7 +37,7 @@ impl ProductKafkaMessagePublisher {
 impl ProductMessagePublisher for ProductKafkaMessagePublisher {
     fn publish_created(&self, event: ProductCreatedEvent) -> anyhow::Result<()> {
         let product_id = &event.product().id().as_uuid().to_string();
-        info!(
+        tracing::info!(
             "Received ProductCreatedEvent for product with id: {}",
             product_id,
         );
@@ -47,7 +47,7 @@ impl ProductMessagePublisher for ProductKafkaMessagePublisher {
             event,
         ) {
             Ok(_) => {
-                info!(
+                tracing::info!(
                     "ProductCreatedEvent published successfully for product with id: {}",
                     product_id,
                 );
@@ -55,7 +55,7 @@ impl ProductMessagePublisher for ProductKafkaMessagePublisher {
                 Ok(())
             }
             Err(error) => {
-                error!(
+                tracing::error!(
                     "Error while sending ProductCreatedEvent to kafka for product id: {}. {}",
                     product_id,
                     error.to_string(),
@@ -68,7 +68,7 @@ impl ProductMessagePublisher for ProductKafkaMessagePublisher {
 
     fn publish_updated(&self, event: ProductUpdatedEvent) -> anyhow::Result<()> {
         let product_id = &event.product().id().as_uuid().to_string();
-        info!(
+        tracing::info!(
             "Received ProductUpdatedEvent for product with id: {}",
             product_id,
         );
@@ -78,7 +78,7 @@ impl ProductMessagePublisher for ProductKafkaMessagePublisher {
             event,
         ) {
             Ok(_) => {
-                info!(
+                tracing::info!(
                     "ProductUpdatedEvent published successfully for product with id: {}",
                     product_id,
                 );
@@ -86,8 +86,39 @@ impl ProductMessagePublisher for ProductKafkaMessagePublisher {
                 Ok(())
             }
             Err(error) => {
-                error!(
+                tracing::error!(
                     "Error while sending ProductUpdatedEvent to kafka for product id: {}. {}",
+                    product_id,
+                    error.to_string(),
+                );
+
+                Err(anyhow!(error))
+            }
+        }
+    }
+
+    fn publish_deleted(&self, event: ProductDeletedEvent) -> anyhow::Result<()> {
+        let product_id = &event.product_id().as_uuid().to_string();
+        tracing::info!(
+            "Received ProductDeletedEvent for product with id: {}",
+            product_id,
+        );
+
+        match self.publish_event::<ProductDeletedEvent, ProductDeletedEventAvroModel>(
+            "product-deleted",
+            event,
+        ) {
+            Ok(_) => {
+                tracing::info!(
+                    "ProductDeletedEvent published successfully for product with id: {}",
+                    product_id,
+                );
+
+                Ok(())
+            }
+            Err(error) => {
+                tracing::error!(
+                    "Error while sending ProductDeletedEvent to kafka for product id: {}. {}",
                     product_id,
                     error.to_string(),
                 );

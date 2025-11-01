@@ -6,7 +6,7 @@ use application::CategoryRepository;
 use diesel::ExpressionMethods;
 use diesel::{OptionalExtension, QueryDsl, RunQueryDsl};
 use domain::{Category, DomainError};
-use uuid::Uuid;
+use shared::domain::value_objects::CategoryId;
 
 pub struct PostgresCategoryRepository {
     pool: DbPool,
@@ -26,16 +26,18 @@ impl CategoryRepository for PostgresCategoryRepository {
         Ok(items.into_iter().map(CategoryEntity::into).collect())
     }
 
-    fn find_by_id(&self, entity_id: Uuid) -> anyhow::Result<Category> {
+    fn find_by_id(&self, entity_id: CategoryId) -> anyhow::Result<Category> {
         let mut connection = self.pool.get()?;
 
-        let ticket_entity = categories
-            .filter(id.eq(entity_id))
+        let category_entity = categories
+            .filter(id.eq(entity_id.as_uuid()))
             .first::<CategoryEntity>(&mut connection)
             .optional()?
-            .ok_or(DomainError::NotFound { id: entity_id })?;
+            .ok_or(DomainError::NotFound {
+                message: format!("Could not find category with id: {}", entity_id.as_uuid()),
+            })?;
 
-        Ok(ticket_entity.into())
+        Ok(category_entity.into())
     }
 
     fn save(&self, entity: Category) -> anyhow::Result<Category> {
@@ -53,9 +55,9 @@ impl CategoryRepository for PostgresCategoryRepository {
         Ok(persistent_entity.into())
     }
 
-    fn delete(&self, entity_id: Uuid) -> anyhow::Result<()> {
+    fn delete(&self, entity_id: CategoryId) -> anyhow::Result<()> {
         let mut connection = self.pool.get()?;
-        diesel::delete(categories.filter(id.eq(entity_id))).execute(&mut connection)?;
+        diesel::delete(categories.filter(id.eq(entity_id.as_uuid()))).execute(&mut connection)?;
 
         Ok(())
     }

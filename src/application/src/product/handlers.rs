@@ -4,7 +4,8 @@ use crate::product::dtos::ProductDto;
 use crate::product::mappers::ProductMapper;
 use crate::product::repositories::ProductRepository;
 use crate::{CategoryRepository, FindProductQuery};
-use domain::{ProductCreatedEvent, ProductUpdatedEvent};
+use domain::{ProductCreatedEvent, ProductDeletedEvent, ProductUpdatedEvent};
+use shared::domain::value_objects::{CategoryId, ProductId};
 use std::sync::Arc;
 
 pub struct FindProductQueryHandler {
@@ -18,7 +19,7 @@ impl FindProductQueryHandler {
 
     pub async fn execute(&self, query: FindProductQuery) -> anyhow::Result<ProductDto> {
         self.repository
-            .find_by_id(query.id.unwrap())
+            .find_by_id(ProductId::from_uuid(query.id.unwrap()))
             .map(ProductDto::from)
     }
 }
@@ -59,7 +60,9 @@ impl CreateProductCommandHandler {
     }
 
     pub async fn execute(&self, command: CreateProductCommand) -> anyhow::Result<ProductDto> {
-        let category = self.category_repository.find_by_id(command.category_id())?;
+        let category = self
+            .category_repository
+            .find_by_id(CategoryId::from_uuid(command.category_id()))?;
         let product =
             ProductMapper::map_create_product_command_to_domain_entity(&command, category)?;
 
@@ -92,7 +95,9 @@ impl UpdateProductCommandHandler {
     }
 
     pub async fn execute(&self, command: UpdateProductCommand) -> anyhow::Result<ProductDto> {
-        let category = self.category_repository.find_by_id(command.category_id())?;
+        let category = self
+            .category_repository
+            .find_by_id(CategoryId::from_uuid(command.category_id()))?;
         let product =
             ProductMapper::map_update_product_command_to_domain_entity(&command, category)?;
 
@@ -107,14 +112,25 @@ impl UpdateProductCommandHandler {
 
 pub struct DeleteProductCommandHandler {
     repository: Arc<dyn ProductRepository>,
+    message_publisher: Arc<dyn ProductMessagePublisher>,
 }
 
 impl DeleteProductCommandHandler {
-    pub fn new(repository: Arc<dyn ProductRepository>) -> Self {
-        Self { repository }
+    pub fn new(
+        repository: Arc<dyn ProductRepository>,
+        message_publisher: Arc<dyn ProductMessagePublisher>,
+    ) -> Self {
+        Self {
+            repository,
+            message_publisher,
+        }
     }
 
     pub async fn execute(&self, command: DeleteProductCommand) -> anyhow::Result<()> {
-        self.repository.delete(command.id)
+        let product_id = ProductId::from_uuid(command.id());
+
+        self.repository.delete(product_id)?;
+        self.message_publisher
+            .publish_deleted(ProductDeletedEvent::new(product_id))
     }
 }

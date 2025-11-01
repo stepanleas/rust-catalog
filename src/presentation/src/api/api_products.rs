@@ -4,7 +4,7 @@ use crate::requests::{CreateProductRequest, UpdateProductRequest};
 use crate::responses::ProductResponse;
 use crate::validation::ValidatedJson;
 use actix_web::web::Path;
-use actix_web::{HttpRequest, HttpResponse, Responder, delete, get, post, put, web};
+use actix_web::{HttpMessage, HttpRequest, HttpResponse, Responder, delete, get, post, put, web};
 use anyhow::anyhow;
 use application::{
     CreateProductCommand, CreateProductCommandHandler, DeleteProductCommand,
@@ -65,6 +65,7 @@ pub async fn find_one(req: HttpRequest, id: Path<Uuid>) -> Result<impl Responder
     Ok(HttpResponse::Ok().json(json!({ "data": ProductResponse::from(product) })))
 }
 
+#[tracing::instrument(skip(req))]
 #[utoipa::path(
     tag = PRODUCTS,
     operation_id = "create_product",
@@ -78,6 +79,14 @@ pub async fn create(
     req: HttpRequest,
     request: ValidatedJson<CreateProductRequest>,
 ) -> Result<impl Responder, ApiError> {
+    let correlation_id = req
+        .extensions()
+        .get::<String>()
+        .cloned()
+        .unwrap_or_else(|| "unknown".to_string());
+
+    tracing::info!(%correlation_id, "Handling product create");
+
     let payload = request.into_inner();
 
     let state = req
@@ -103,6 +112,7 @@ pub async fn create(
     Ok(HttpResponse::Created().json(json!({ "data": ProductResponse::from(product) })))
 }
 
+#[tracing::instrument(skip(req))]
 #[utoipa::path(
     tag = PRODUCTS,
     operation_id = "update_product",
@@ -120,6 +130,14 @@ pub async fn update(
     id: Path<Uuid>,
     request: ValidatedJson<UpdateProductRequest>,
 ) -> Result<impl Responder, ApiError> {
+    let correlation_id = req
+        .extensions()
+        .get::<String>()
+        .cloned()
+        .unwrap_or_else(|| "unknown".to_string());
+
+    tracing::info!(%correlation_id, "Handling product update");
+
     let payload = request.into_inner();
 
     let state = req
@@ -146,6 +164,7 @@ pub async fn update(
     Ok(HttpResponse::Created().json(json!({ "data": ProductResponse::from(product) })))
 }
 
+#[tracing::instrument(skip(req))]
 #[utoipa::path(
     tag = PRODUCTS,
     operation_id = "delete_product",
@@ -158,11 +177,22 @@ pub async fn update(
 )]
 #[delete("/{id}")]
 pub async fn delete(req: HttpRequest, id: Path<Uuid>) -> Result<impl Responder, ApiError> {
+    let correlation_id = req
+        .extensions()
+        .get::<String>()
+        .cloned()
+        .unwrap_or_else(|| "unknown".to_string());
+
+    tracing::info!(%correlation_id, "Handling product delete");
+
     let state = req
         .app_data::<web::Data<AppState>>()
         .ok_or_else(|| ApiError::internal(anyhow!("Missing app state")))?;
 
-    let handler = DeleteProductCommandHandler::new(state.product_repository.clone());
+    let handler = DeleteProductCommandHandler::new(
+        state.product_repository.clone(),
+        state.product_message_publisher.clone(),
+    );
     let command = DeleteProductCommand::new(id.into_inner());
 
     handler.execute(command).await?;

@@ -50,11 +50,15 @@ impl UpdateCategoryCommand {
 }
 
 pub struct DeleteCategoryCommand {
-    pub id: Uuid,
+    id: Uuid,
 }
 
 impl DeleteCategoryCommand {
     pub fn new(id: Uuid) -> Self {
         DeleteCategoryCommand { id }
+    }
+
+    pub fn id(&self) -> Uuid {
+        self.id
     }
 }

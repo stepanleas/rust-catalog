@@ -8,7 +8,7 @@ use application::ProductRepository;
 use diesel::{ExpressionMethods, SelectableHelper};
 use diesel::{OptionalExtension, QueryDsl, RunQueryDsl};
 use domain::{DomainError, Product};
-use uuid::Uuid;
+use shared::domain::value_objects::ProductId;
 
 pub struct PostgresProductRepository {
     pool: DbPool,
@@ -35,16 +35,18 @@ impl ProductRepository for PostgresProductRepository {
             .collect())
     }
 
-    fn find_by_id(&self, entity_id: Uuid) -> anyhow::Result<Product> {
+    fn find_by_id(&self, entity_id: ProductId) -> anyhow::Result<Product> {
         let mut connection = self.pool.get()?;
 
         let (product_entity, category_entity) = products
             .inner_join(categories)
-            .filter(crate::schema::products::id.eq(entity_id))
+            .filter(crate::schema::products::id.eq(entity_id.as_uuid()))
             .select((ProductEntity::as_select(), CategoryEntity::as_select()))
             .first::<(ProductEntity, CategoryEntity)>(&mut connection)
             .optional()?
-            .ok_or(DomainError::NotFound { id: entity_id })?;
+            .ok_or(DomainError::NotFound {
+                message: format!("Could not find product with id: {}", entity_id.as_uuid()),
+            })?;
 
         Ok(product_entity.into_domain(category_entity))
     }
@@ -68,9 +70,9 @@ impl ProductRepository for PostgresProductRepository {
         Ok(product_entity.into_domain(category_entity))
     }
 
-    fn delete(&self, entity_id: Uuid) -> anyhow::Result<()> {
+    fn delete(&self, entity_id: ProductId) -> anyhow::Result<()> {
         let mut connection = self.pool.get()?;
-        diesel::delete(products.filter(crate::schema::products::id.eq(entity_id)))
+        diesel::delete(products.filter(crate::schema::products::id.eq(entity_id.as_uuid())))
             .execute(&mut connection)?;
 
         Ok(())

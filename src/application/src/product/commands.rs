@@ -24,9 +24,7 @@ impl CreateProductCommand {
             category_id,
         }
     }
-}
 
-impl CreateProductCommand {
     pub fn title(&self) -> &str {
         &self.title
     }
@@ -58,6 +56,24 @@ pub struct UpdateProductCommand {
 }
 
 impl UpdateProductCommand {
+    pub fn new(
+        id: Uuid,
+        title: String,
+        description: String,
+        quantity: i32,
+        price: f64,
+        category_id: Uuid,
+    ) -> Self {
+        UpdateProductCommand {
+            id,
+            title,
+            description,
+            quantity,
+            price,
+            category_id,
+        }
+    }
+
     pub fn id(&self) -> Uuid {
         self.id
     }
@@ -83,32 +99,16 @@ impl UpdateProductCommand {
     }
 }
 
-impl UpdateProductCommand {
-    pub fn new(
-        id: Uuid,
-        title: String,
-        description: String,
-        quantity: i32,
-        price: f64,
-        category_id: Uuid,
-    ) -> Self {
-        UpdateProductCommand {
-            id,
-            title,
-            description,
-            quantity,
-            price,
-            category_id,
-        }
-    }
-}
-
 pub struct DeleteProductCommand {
-    pub id: Uuid,
+    id: Uuid,
 }
 
 impl DeleteProductCommand {
     pub fn new(id: Uuid) -> Self {
         DeleteProductCommand { id }
+    }
+
+    pub fn id(&self) -> Uuid {
+        self.id
     }
 }

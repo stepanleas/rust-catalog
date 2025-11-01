@@ -4,6 +4,7 @@ use crate::category::dtos::CategoryDto;
 use crate::category::mappers::CategoryMapper;
 use crate::category::queries::FindCategoryQuery;
 use crate::category::repositories::CategoryRepository;
+use shared::domain::value_objects::CategoryId;
 use std::sync::Arc;
 
 pub struct FindCategoryQueryHandler {
@@ -17,7 +18,7 @@ impl FindCategoryQueryHandler {
 
     pub async fn execute(&self, query: FindCategoryQuery) -> anyhow::Result<CategoryDto> {
         self.repository
-            .find_by_id(query.id.unwrap())
+            .find_by_id(CategoryId::from_uuid(query.id().unwrap()))
             .map(CategoryDto::from)
     }
 }
@@ -80,6 +81,6 @@ impl DeleteCategoryCommandHandler {
     }
 
     pub async fn execute(&self, command: DeleteCategoryCommand) -> anyhow::Result<()> {
-        self.repository.delete(command.id)
+        self.repository.delete(CategoryId::from_uuid(command.id()))
     }
 }
