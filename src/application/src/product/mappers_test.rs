@@ -1,8 +1,8 @@
 #[cfg(test)]
 mod tests {
+    use crate::product::commands::{CreateProductCommand, UpdateProductCommand};
     use crate::product::mappers::ProductMapper;
-    use crate::{CreateProductCommand, UpdateProductCommand};
-    use domain::Category;
+    use domain::entities::Category;
     use shared::domain::value_objects::{CategoryId, Money, ProductId};
     use uuid::Uuid;
 

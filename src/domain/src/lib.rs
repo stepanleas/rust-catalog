@@ -1,14 +1,6 @@
 mod builders;
-mod entities;
+pub mod entities;
 mod entities_test;
-mod enums;
-mod error;
-mod events;
-
-pub use entities::Category;
-pub use entities::Product;
-pub use error::DomainError;
-
-pub use events::ProductCreatedEvent;
-pub use events::ProductDeletedEvent;
-pub use events::ProductUpdatedEvent;
+pub mod enums;
+pub mod error;
+pub mod events;

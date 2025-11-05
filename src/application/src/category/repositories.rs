@@ -1,6 +1,8 @@
-use domain::Category;
+use domain::entities::Category;
+use mockall::automock;
 use shared::domain::value_objects::CategoryId;
 
+#[automock]
 pub trait CategoryRepository {
     fn list_all(&self) -> anyhow::Result<Vec<Category>>;
     fn find_by_id(&self, entity_id: CategoryId) -> anyhow::Result<Category>;

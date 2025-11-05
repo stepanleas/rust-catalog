@@ -15,6 +15,9 @@ print_schema:
 cargo_fmt:
 	cargo fmt --all
 
+cargo_fmt_check:
+	cargo fmt --all -- --check
+
 cargo_fix:
 	cargo fix --workspace --allow-dirty --allow-staged
 
@@ -27,4 +30,4 @@ cargo_test:
 cargo_clean:
 	rm -rf ~/.cargo/registry/index/*
 
-cargo_all_checks: cargo_fmt cargo_fix cargo_clippy cargo_test
+cargo_all_checks: cargo_fmt_check cargo_fix cargo_clippy cargo_test

@@ -3,10 +3,12 @@ use actix_web::middleware::Logger;
 use actix_web::web::Data;
 use actix_web::{App, HttpServer};
 use anyhow::Result;
-use application::Settings;
-use infrastructure::{PostgresCategoryRepository, PostgresProductRepository};
+use application::settings::Settings;
+use infrastructure::category::postgres_category_repository::PostgresCategoryRepository;
+use infrastructure::product::postgres_product_repository::PostgresProductRepository;
 use kafka::client::KafkaClient;
-use messaging::{KafkaProducer, ProductKafkaMessagePublisher};
+use messaging::kafka::producer::KafkaProducer;
+use messaging::kafka::publishers::ProductKafkaMessagePublisher;
 use presentation::{AppState, CorrelationIdMiddleware};
 use std::sync::Arc;
 use tracing_actix_web::TracingLogger;
@@ -22,7 +24,7 @@ async fn run_internal(settings: &Settings) -> Result<Server> {
     tracing::info!("Starting HTTP server at {}", settings.http_url);
     tracing::debug!("with configuration: {:?}", settings);
 
-    let pool = infrastructure::configure(settings.database_url.clone()).await?;
+    let pool = infrastructure::config::configure(settings.database_url.clone()).await?;
     let mut kafka_client = KafkaClient::new(vec![settings.kafka_host.to_owned()]);
     kafka_client.load_metadata_all()?;
 

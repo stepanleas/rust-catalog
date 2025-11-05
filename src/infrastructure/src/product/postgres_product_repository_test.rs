@@ -1,8 +1,12 @@
 #[cfg(test)]
 mod tests {
-    use crate::{PostgresCategoryRepository, PostgresProductRepository, configure};
-    use application::{CategoryRepository, ProductRepository};
-    use domain::{Category, DomainError, Product};
+    use crate::category::postgres_category_repository::PostgresCategoryRepository;
+    use crate::config::configure;
+    use crate::product::postgres_product_repository::PostgresProductRepository;
+    use application::category::repositories::CategoryRepository;
+    use application::product::repositories::ProductRepository;
+    use domain::entities::{Category, Product};
+    use domain::error::DomainError;
     use shared::domain::value_objects::{CategoryId, Money, ProductId};
     use testcontainers::runners::AsyncRunner;
     use testcontainers_modules::postgres::Postgres;
@@ -78,6 +82,11 @@ mod tests {
 
         let products = ctx.product_repository.list_all()?;
         assert_eq!(products.len(), 2);
+
+        assert_eq!(products[0].title(), "first product title");
+        assert_eq!(products[0].description(), "first product description");
+        assert_eq!(products[1].title(), "second product title");
+        assert_eq!(products[1].description(), "second product description");
 
         Ok(())
     }

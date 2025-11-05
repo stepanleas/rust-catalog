@@ -46,13 +46,14 @@ testcontainers = "0.25.0"
 testcontainers-modules = { version = "0.13.0", features = ["postgres"] }
 reqwest = { version = "0.12.23", features = ["json"]}
 serial_test = "3.2.0"
+mockall = "0.13.1"
 
 # Misc
 uuid = { version = "1.18.1", features = ["v4", "serde"] }
 readonly = "0.2.13"
 chrono = { version = "0.4.42", default-features = false, features = ["clock"] }
 futures = "0.3.31"
-tokio = "1.48.0"
+tokio = { version = "1.36.0", features = ["rt-multi-thread", "macros", "time", "sync"] }
 
 # Messaging
 kafka = "0.10"

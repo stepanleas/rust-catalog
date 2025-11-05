@@ -1,27 +1,12 @@
-use crate::DeleteCategoryCommand;
-use crate::category::commands::{CreateCategoryCommand, UpdateCategoryCommand};
+use crate::category::commands::{
+    CreateCategoryCommand, DeleteCategoryCommand, UpdateCategoryCommand,
+};
 use crate::category::dtos::CategoryDto;
 use crate::category::mappers::CategoryMapper;
 use crate::category::queries::FindCategoryQuery;
 use crate::category::repositories::CategoryRepository;
 use shared::domain::value_objects::CategoryId;
 use std::sync::Arc;
-
-pub struct FindCategoryQueryHandler {
-    repository: Arc<dyn CategoryRepository>,
-}
-
-impl FindCategoryQueryHandler {
-    pub fn new(repository: Arc<dyn CategoryRepository>) -> Self {
-        Self { repository }
-    }
-
-    pub async fn execute(&self, query: FindCategoryQuery) -> anyhow::Result<CategoryDto> {
-        self.repository
-            .find_by_id(CategoryId::from_uuid(query.id().unwrap()))
-            .map(CategoryDto::from)
-    }
-}
 
 pub struct ListAllCategoryQueryHandler {
     repository: Arc<dyn CategoryRepository>,
@@ -36,6 +21,22 @@ impl ListAllCategoryQueryHandler {
         self.repository
             .list_all()
             .map(|items| items.into_iter().map(CategoryDto::from).collect())
+    }
+}
+
+pub struct FindCategoryQueryHandler {
+    repository: Arc<dyn CategoryRepository>,
+}
+
+impl FindCategoryQueryHandler {
+    pub fn new(repository: Arc<dyn CategoryRepository>) -> Self {
+        Self { repository }
+    }
+
+    pub async fn execute(&self, query: FindCategoryQuery) -> anyhow::Result<CategoryDto> {
+        self.repository
+            .find_by_id(CategoryId::from_uuid(query.id().unwrap()))
+            .map(CategoryDto::from)
     }
 }
 

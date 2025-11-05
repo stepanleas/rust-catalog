@@ -1,4 +1,4 @@
-use crate::responses::HealthCheckResponse;
+use crate::responses::general::HealthCheckResponse;
 use actix_web::{Error, HttpRequest, HttpResponse, Responder, get};
 use serde_json::json;
 

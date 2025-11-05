@@ -1,4 +1,4 @@
-use crate::{Category, Product};
+use crate::entities::{Category, Product};
 use shared::domain::value_objects::{CategoryId, Money, ProductId};
 
 #[derive(Default)]

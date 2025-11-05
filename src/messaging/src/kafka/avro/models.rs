@@ -1,5 +1,5 @@
 use apache_avro::Schema;
-use domain::{ProductCreatedEvent, ProductDeletedEvent, ProductUpdatedEvent};
+use domain::events::{ProductCreatedEvent, ProductDeletedEvent, ProductUpdatedEvent};
 use serde::Serialize;
 
 pub trait AvroSerializable {

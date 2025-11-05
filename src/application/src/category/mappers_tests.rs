@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
+    use crate::category::commands::{CreateCategoryCommand, UpdateCategoryCommand};
     use crate::category::mappers::CategoryMapper;
-    use crate::{CreateCategoryCommand, UpdateCategoryCommand};
     use shared::domain::value_objects::CategoryId;
     use uuid::Uuid;
 

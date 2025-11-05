@@ -1,6 +1,6 @@
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
-use domain::Category;
+use domain::entities::Category;
 use shared::domain::value_objects::CategoryId;
 use uuid::Uuid;
 

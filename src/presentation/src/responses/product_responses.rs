@@ -1,5 +1,5 @@
-use crate::responses::CategoryResponse;
-use application::ProductDto;
+use crate::responses::category_responses::CategoryResponse;
+use application::product::dtos::ProductDto;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use uuid::Uuid;

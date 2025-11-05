@@ -1,28 +1,13 @@
-use crate::ports::output::ProductMessagePublisher;
+use crate::category::repositories::CategoryRepository;
+use crate::ports::output::publishers::ProductMessagePublisher;
 use crate::product::commands::{CreateProductCommand, DeleteProductCommand, UpdateProductCommand};
 use crate::product::dtos::ProductDto;
 use crate::product::mappers::ProductMapper;
+use crate::product::queries::FindProductQuery;
 use crate::product::repositories::ProductRepository;
-use crate::{CategoryRepository, FindProductQuery};
-use domain::{ProductCreatedEvent, ProductDeletedEvent, ProductUpdatedEvent};
+use domain::events::{ProductCreatedEvent, ProductDeletedEvent, ProductUpdatedEvent};
 use shared::domain::value_objects::{CategoryId, ProductId};
 use std::sync::Arc;
-
-pub struct FindProductQueryHandler {
-    repository: Arc<dyn ProductRepository>,
-}
-
-impl FindProductQueryHandler {
-    pub fn new(repository: Arc<dyn ProductRepository>) -> Self {
-        Self { repository }
-    }
-
-    pub async fn execute(&self, query: FindProductQuery) -> anyhow::Result<ProductDto> {
-        self.repository
-            .find_by_id(ProductId::from_uuid(query.id.unwrap()))
-            .map(ProductDto::from)
-    }
-}
 
 pub struct ListAllProductQueryHandler {
     repository: Arc<dyn ProductRepository>,
@@ -37,6 +22,22 @@ impl ListAllProductQueryHandler {
         self.repository
             .list_all()
             .map(|items| items.into_iter().map(ProductDto::from).collect())
+    }
+}
+
+pub struct FindProductQueryHandler {
+    repository: Arc<dyn ProductRepository>,
+}
+
+impl FindProductQueryHandler {
+    pub fn new(repository: Arc<dyn ProductRepository>) -> Self {
+        Self { repository }
+    }
+
+    pub async fn execute(&self, query: FindProductQuery) -> anyhow::Result<ProductDto> {
+        self.repository
+            .find_by_id(ProductId::from_uuid(query.id.unwrap()))
+            .map(ProductDto::from)
     }
 }
 

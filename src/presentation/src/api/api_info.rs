@@ -1,6 +1,6 @@
 use crate::AppState;
 use crate::error::ApiError;
-use crate::responses::AppInfoResponse;
+use crate::responses::general::AppInfoResponse;
 use actix_web::{HttpRequest, HttpResponse, Responder, get, web};
 use anyhow::anyhow;
 use serde_json::json;

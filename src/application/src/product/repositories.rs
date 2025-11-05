@@ -1,6 +1,8 @@
-use domain::Product;
+use domain::entities::Product;
+use mockall::automock;
 use shared::domain::value_objects::ProductId;
 
+#[automock]
 pub trait ProductRepository {
     fn list_all(&self) -> anyhow::Result<Vec<Product>>;
     fn find_by_id(&self, entity_id: ProductId) -> anyhow::Result<Product>;

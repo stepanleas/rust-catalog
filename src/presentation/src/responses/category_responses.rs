@@ -1,4 +1,4 @@
-use application::CategoryDto;
+use application::category::dtos::CategoryDto;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use uuid::Uuid;

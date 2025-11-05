@@ -1,5 +1,5 @@
-use crate::{CreateCategoryCommand, UpdateCategoryCommand};
-use domain::Category;
+use crate::category::commands::{CreateCategoryCommand, UpdateCategoryCommand};
+use domain::entities::Category;
 use shared::domain::value_objects::CategoryId;
 
 pub struct CategoryMapper;

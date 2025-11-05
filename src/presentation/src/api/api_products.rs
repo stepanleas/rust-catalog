@@ -1,16 +1,19 @@
 use crate::app_state::AppState;
 use crate::error::ApiError;
-use crate::requests::{CreateProductRequest, UpdateProductRequest};
-use crate::responses::ProductResponse;
+use crate::requests::product_requests::{CreateProductRequest, UpdateProductRequest};
+use crate::responses::product_responses::ProductResponse;
 use crate::validation::ValidatedJson;
 use actix_web::web::Path;
 use actix_web::{HttpMessage, HttpRequest, HttpResponse, Responder, delete, get, post, put, web};
 use anyhow::anyhow;
-use application::{
-    CreateProductCommand, CreateProductCommandHandler, DeleteProductCommand,
-    DeleteProductCommandHandler, FindProductQuery, FindProductQueryHandler,
-    ListAllProductQueryHandler, UpdateProductCommand, UpdateProductCommandHandler,
+use application::product::commands::{
+    CreateProductCommand, DeleteProductCommand, UpdateProductCommand,
 };
+use application::product::handlers::{
+    CreateProductCommandHandler, DeleteProductCommandHandler, FindProductQueryHandler,
+    ListAllProductQueryHandler, UpdateProductCommandHandler,
+};
+use application::product::queries::FindProductQuery;
 use serde_json::json;
 use uuid::Uuid;
 
@@ -74,7 +77,7 @@ pub async fn find_one(req: HttpRequest, id: Path<Uuid>) -> Result<impl Responder
     ),
     request_body = CreateProductRequest,
 )]
-#[post("")]
+#[post("/api/products")]
 pub async fn create(
     req: HttpRequest,
     request: ValidatedJson<CreateProductRequest>,

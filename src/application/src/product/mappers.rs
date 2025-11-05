@@ -1,5 +1,5 @@
-use crate::{CreateProductCommand, UpdateProductCommand};
-use domain::{Category, Product};
+use crate::product::commands::{CreateProductCommand, UpdateProductCommand};
+use domain::entities::{Category, Product};
 use shared::domain::value_objects::{Money, ProductId};
 
 pub struct ProductMapper;

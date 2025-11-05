@@ -1,8 +1,10 @@
 #[cfg(test)]
 mod tests {
-    use crate::{PostgresCategoryRepository, configure};
-    use application::CategoryRepository;
-    use domain::{Category, DomainError};
+    use crate::category::postgres_category_repository::PostgresCategoryRepository;
+    use crate::config::configure;
+    use application::category::repositories::CategoryRepository;
+    use domain::entities::Category;
+    use domain::error::DomainError;
     use shared::domain::value_objects::CategoryId;
     use testcontainers::runners::AsyncRunner;
     use testcontainers_modules::postgres::Postgres;
@@ -30,21 +32,26 @@ mod tests {
     async fn test_list_all() -> anyhow::Result<()> {
         let ctx = setup_context().await?;
 
-        let first = Category::new(
+        let first_category = Category::new(
             CategoryId::new(),
             "category title 1".into(),
             "category description 1".into(),
         );
-        let second = Category::new(
+        let second_category = Category::new(
             CategoryId::new(),
             "category title 2".into(),
             "category description 2".into(),
         );
-        ctx.repository.save(first)?;
-        ctx.repository.save(second)?;
+        ctx.repository.save(first_category)?;
+        ctx.repository.save(second_category)?;
 
         let categories = ctx.repository.list_all()?;
         assert_eq!(categories.len(), 2);
+
+        assert_eq!(categories[0].title(), "category title 1");
+        assert_eq!(categories[0].description(), "category description 1");
+        assert_eq!(categories[1].title(), "category title 2");
+        assert_eq!(categories[1].description(), "category description 2");
 
         Ok(())
     }

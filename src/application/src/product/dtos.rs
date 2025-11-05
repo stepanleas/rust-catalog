@@ -1,5 +1,5 @@
-use crate::CategoryDto;
-use domain::Product;
+use crate::category::dtos::CategoryDto;
+use domain::entities::Product;
 use shared::domain::value_objects::Money;
 use uuid::Uuid;
 

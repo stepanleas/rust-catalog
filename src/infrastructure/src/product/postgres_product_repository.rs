@@ -4,10 +4,11 @@ use crate::schema::products::dsl::products;
 use crate::DbPool;
 use crate::category::entity::CategoryEntity;
 use crate::product::entity::ProductEntity;
-use application::ProductRepository;
+use application::product::repositories::ProductRepository;
 use diesel::{ExpressionMethods, SelectableHelper};
 use diesel::{OptionalExtension, QueryDsl, RunQueryDsl};
-use domain::{DomainError, Product};
+use domain::entities::Product;
+use domain::error::DomainError;
 use shared::domain::value_objects::ProductId;
 
 pub struct PostgresProductRepository {

@@ -1,8 +1,9 @@
-use crate::Product;
+use crate::entities::Product;
 use chrono::{DateTime, Utc};
 use shared::domain::value_objects::ProductId;
 use uuid::Uuid;
 
+#[derive(Debug, PartialEq)]
 pub struct ProductCreatedEvent {
     id: Uuid,
     product: Product,

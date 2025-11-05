@@ -1,16 +1,19 @@
 use crate::app_state::AppState;
 use crate::error::ApiError;
-use crate::requests::{CreateCategoryRequest, UpdateCategoryRequest};
-use crate::responses::CategoryResponse;
+use crate::requests::category_requests::{CreateCategoryRequest, UpdateCategoryRequest};
+use crate::responses::category_responses::CategoryResponse;
 use crate::validation::ValidatedJson;
 use actix_web::web::Path;
 use actix_web::{HttpMessage, HttpRequest, HttpResponse, Responder, delete, get, post, put, web};
 use anyhow::anyhow;
-use application::{
-    CreateCategoryCommand, CreateCategoryCommandHandler, DeleteCategoryCommand,
-    DeleteCategoryCommandHandler, FindCategoryQuery, FindCategoryQueryHandler,
-    ListAllCategoryQueryHandler, UpdateCategoryCommand, UpdateCategoryCommandHandler,
+use application::category::commands::{
+    CreateCategoryCommand, DeleteCategoryCommand, UpdateCategoryCommand,
 };
+use application::category::handlers::{
+    CreateCategoryCommandHandler, DeleteCategoryCommandHandler, FindCategoryQueryHandler,
+    ListAllCategoryQueryHandler, UpdateCategoryCommandHandler,
+};
+use application::category::queries::FindCategoryQuery;
 use serde_json::json;
 use tracing::info;
 use uuid::Uuid;

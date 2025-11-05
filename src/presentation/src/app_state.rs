@@ -1,4 +1,7 @@
-use application::{CategoryRepository, ProductMessagePublisher, ProductRepository, Settings};
+use application::category::repositories::CategoryRepository;
+use application::ports::output::publishers::ProductMessagePublisher;
+use application::product::repositories::ProductRepository;
+use application::settings::Settings;
 use std::sync::Arc;
 
 #[derive(Clone)]

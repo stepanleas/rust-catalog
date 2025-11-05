@@ -1,11 +1,11 @@
-use crate::kafka::avro::{
+use crate::kafka::avro::models::{
     AvroSerializable, ProductCreatedEventAvroModel, ProductDeletedEventAvroModel,
     ProductUpdatedEventAvroModel,
 };
 use crate::kafka::producer::KafkaProducer;
 use anyhow::anyhow;
-use application::ProductMessagePublisher;
-use domain::{ProductCreatedEvent, ProductDeletedEvent, ProductUpdatedEvent};
+use application::ports::output::publishers::ProductMessagePublisher;
+use domain::events::{ProductCreatedEvent, ProductDeletedEvent, ProductUpdatedEvent};
 use std::sync::Mutex;
 
 pub struct ProductKafkaMessagePublisher {

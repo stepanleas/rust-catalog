@@ -1,5 +1,5 @@
 use crate::validation::ValidationFieldError;
-use application::Settings;
+use application::settings::Settings;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 

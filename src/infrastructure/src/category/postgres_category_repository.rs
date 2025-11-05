@@ -2,10 +2,11 @@ use crate::DbPool;
 use crate::category::entity::CategoryEntity;
 use crate::schema::categories::dsl::categories;
 use crate::schema::categories::id;
-use application::CategoryRepository;
+use application::category::repositories::CategoryRepository;
 use diesel::ExpressionMethods;
 use diesel::{OptionalExtension, QueryDsl, RunQueryDsl};
-use domain::{Category, DomainError};
+use domain::entities::Category;
+use domain::error::DomainError;
 use shared::domain::value_objects::CategoryId;
 
 pub struct PostgresCategoryRepository {

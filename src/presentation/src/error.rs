@@ -1,8 +1,8 @@
-use crate::responses::ErrorResponse;
+use crate::responses::general::ErrorResponse;
 use crate::validation::ValidationFieldError;
 use actix_web::{HttpResponse, ResponseError, http::StatusCode};
 use anyhow::Error as AnyhowError;
-use domain::DomainError;
+use domain::error::DomainError;
 use thiserror::Error;
 use validator::ValidationErrors;
 
