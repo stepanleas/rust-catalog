@@ -40,3 +40,9 @@ impl HealthCheckResponse {
         }
     }
 }
+
+impl Default for HealthCheckResponse {
+    fn default() -> Self {
+        Self::new()
+    }
+}

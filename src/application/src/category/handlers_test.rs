@@ -38,7 +38,7 @@ mod tests {
             .returning(move || Ok(expected_categories.clone()));
 
         let handler = ListAllCategoryQueryHandler::new(Arc::new(mock_repository));
-        let category_dtos = futures::executor::block_on(handler.execute())?;
+        let category_dtos = handler.execute().await?;
 
         assert_eq!(category_dtos.len(), 2);
         assert_eq!(category_dtos[0].title(), "Books");
@@ -75,9 +75,9 @@ mod tests {
 
         let handler = FindCategoryQueryHandler::new(Arc::new(mock_repository));
 
-        let category_dto = futures::executor::block_on(
-            handler.execute(FindCategoryQuery::new(Option::from(*category_id.as_uuid()))),
-        )?;
+        let category_dto = handler
+            .execute(FindCategoryQuery::new(Option::from(*category_id.as_uuid())))
+            .await?;
 
         assert_eq!(category_dto.title(), "Books");
         assert_eq!(
@@ -107,7 +107,7 @@ mod tests {
             "Books".to_string(),
             "A category for all book products".to_string(),
         );
-        let category_dto = futures::executor::block_on(handler.execute(command))?;
+        let category_dto = handler.execute(command).await?;
 
         assert_eq!(category_dto.title(), "Books");
         assert_eq!(
@@ -141,7 +141,7 @@ mod tests {
             "Books".to_string(),
             "A category for all book products".to_string(),
         );
-        let category_dto = futures::executor::block_on(handler.execute(command))?;
+        let category_dto = handler.execute(command).await?;
 
         assert_eq!(category_dto.id(), category_id);
         assert_eq!(category_dto.title(), "Books");
@@ -166,7 +166,7 @@ mod tests {
 
         let handler = DeleteCategoryCommandHandler::new(Arc::new(mock_repository));
 
-        futures::executor::block_on(handler.execute(command))?;
+        handler.execute(command).await?;
 
         Ok(())
     }

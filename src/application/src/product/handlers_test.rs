@@ -57,7 +57,7 @@ mod tests {
             .returning(move || Ok(expected_products.clone()));
 
         let handler = ListAllProductQueryHandler::new(Arc::new(mock_repository));
-        let product_dtos = futures::executor::block_on(handler.execute())?;
+        let product_dtos = handler.execute().await?;
 
         assert_eq!(product_dtos.len(), 2);
 
@@ -111,9 +111,9 @@ mod tests {
             .returning(move |_| Ok(expected_product.clone()));
 
         let handler = FindProductQueryHandler::new(Arc::new(mock_repository));
-        let product_dto = futures::executor::block_on(
-            handler.execute(FindProductQuery::new(Option::from(*product_id.as_uuid()))),
-        )?;
+        let product_dto = handler
+            .execute(FindProductQuery::new(Option::from(*product_id.as_uuid())))
+            .await?;
 
         assert_eq!(product_dto.title(), "Laptop");
         assert_eq!(product_dto.description(), "A high-performance laptop");
@@ -132,7 +132,7 @@ mod tests {
     async fn test_create_product_command_handler_execute() -> anyhow::Result<()> {
         let mut mock_category_repository = MockCategoryRepository::new();
         let mut mock_product_repository = MockProductRepository::new();
-        let mut mock_product_message_publisher = MockProductMessagePublisher::new();
+        let mut mock_message_publisher = MockProductMessagePublisher::new();
 
         let category_id = Uuid::new_v4();
 
@@ -159,9 +159,9 @@ mod tests {
                     && product.category().title() == "Electronics"
                     && product.category().description() == "Electronic devices and gadgets"
             })
-            .returning(|product| Ok(product.clone()));
+            .returning(Ok);
 
-        mock_product_message_publisher
+        mock_message_publisher
             .expect_publish_created()
             .times(1)
             .withf(|event| {
@@ -185,10 +185,10 @@ mod tests {
         let handler = CreateProductCommandHandler::new(
             Arc::new(mock_product_repository),
             Arc::new(mock_category_repository),
-            Arc::new(mock_product_message_publisher),
+            Arc::new(mock_message_publisher),
         );
 
-        let product_dto = futures::executor::block_on(handler.execute(command))?;
+        let product_dto = handler.execute(command).await?;
         assert_eq!(product_dto.title(), "Laptop");
         assert_eq!(product_dto.description(), "A high-performance laptop");
         assert_eq!(product_dto.quantity(), 15);
@@ -207,7 +207,7 @@ mod tests {
     async fn test_update_product_command_handler_execute() -> anyhow::Result<()> {
         let mut mock_category_repository = MockCategoryRepository::new();
         let mut mock_product_repository = MockProductRepository::new();
-        let mut mock_product_message_publisher = MockProductMessagePublisher::new();
+        let mut mock_message_publisher = MockProductMessagePublisher::new();
 
         let product_id = Uuid::new_v4();
         let category_id = Uuid::new_v4();
@@ -236,9 +236,9 @@ mod tests {
                     && product.category().title() == "Electronics"
                     && product.category().description() == "Electronic devices and gadgets"
             })
-            .returning(|product| Ok(product.clone()));
+            .returning(Ok);
 
-        mock_product_message_publisher
+        mock_message_publisher
             .expect_publish_updated()
             .times(1)
             .withf(move |event| {
@@ -264,10 +264,10 @@ mod tests {
         let handler = UpdateProductCommandHandler::new(
             Arc::new(mock_product_repository),
             Arc::new(mock_category_repository),
-            Arc::new(mock_product_message_publisher),
+            Arc::new(mock_message_publisher),
         );
 
-        let product_dto = futures::executor::block_on(handler.execute(command))?;
+        let product_dto = handler.execute(command).await?;
         assert_eq!(product_dto.title(), "Laptop");
         assert_eq!(product_dto.description(), "A high-performance laptop");
         assert_eq!(product_dto.quantity(), 15);
@@ -284,29 +284,29 @@ mod tests {
 
     #[tokio::test]
     async fn test_delete_product_command_handler_execute() -> anyhow::Result<()> {
-        let mut mock_product_repository = MockProductRepository::new();
-        let mut mock_product_message_publisher = MockProductMessagePublisher::new();
+        let mut mock_repository = MockProductRepository::new();
+        let mut mock_message_publisher = MockProductMessagePublisher::new();
 
         let product_id = Uuid::new_v4();
 
         let command = DeleteProductCommand::new(product_id);
 
-        mock_product_repository
+        mock_repository
             .expect_delete()
             .times(1)
             .returning(|_| Ok(()));
-        mock_product_message_publisher
+        mock_message_publisher
             .expect_publish_deleted()
             .times(1)
             .withf(move |event| event.product_id() == ProductId::from_uuid(product_id))
             .returning(|_| Ok(()));
 
         let handler = DeleteProductCommandHandler::new(
-            Arc::new(mock_product_repository),
-            Arc::new(mock_product_message_publisher),
+            Arc::new(mock_repository),
+            Arc::new(mock_message_publisher),
         );
 
-        futures::executor::block_on(handler.execute(command))?;
+        handler.execute(command).await?;
 
         Ok(())
     }

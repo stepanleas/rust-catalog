@@ -9,7 +9,8 @@ use infrastructure::product::postgres_product_repository::PostgresProductReposit
 use kafka::client::KafkaClient;
 use messaging::kafka::producer::KafkaProducer;
 use messaging::kafka::publishers::ProductKafkaMessagePublisher;
-use presentation::{AppState, CorrelationIdMiddleware};
+use presentation::app_state::AppState;
+use presentation::middleware::correlation_id::CorrelationIdMiddleware;
 use std::sync::Arc;
 use tracing_actix_web::TracingLogger;
 use utoipa_actix_web::AppExt;
@@ -42,9 +43,9 @@ async fn run_internal(settings: &Settings) -> Result<Server> {
             .wrap(TracingLogger::default())
             .wrap(CorrelationIdMiddleware)
             .into_utoipa_app()
-            .openapi(presentation::open_api_docs())
+            .openapi(presentation::api::docs::open_api_docs())
             .map(|app| app.wrap(Logger::default()))
-            .map(|app| app.configure(presentation::configure))
+            .map(|app| app.configure(presentation::config::configure))
             .openapi_service(|api| {
                 SwaggerUi::new("/swagger-ui/{_:.*}").url("/api-docs/openapi.json", api)
             })

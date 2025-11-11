@@ -7,7 +7,7 @@ mod tests {
     use uuid::Uuid;
 
     #[test]
-    fn test_create_product_command_to_domain_entity() {
+    fn test_create_product_command_to_domain_entity() -> anyhow::Result<()> {
         let category_id = CategoryId::new();
         let category = Category::new(
             category_id,
@@ -23,7 +23,7 @@ mod tests {
             category.id().into(),
         );
         let product =
-            ProductMapper::map_create_product_command_to_domain_entity(&command, category).unwrap();
+            ProductMapper::map_create_product_command_to_domain_entity(&command, category)?;
 
         assert_ne!(product.id().as_uuid().to_string(), Uuid::nil().to_string());
         assert_eq!(product.title(), "product title");
@@ -34,10 +34,12 @@ mod tests {
         assert_eq!(product.category().id(), category_id);
         assert_eq!(product.category().title(), "category title");
         assert_eq!(product.category().description(), "category description");
+
+        Ok(())
     }
 
     #[test]
-    fn test_update_product_command_to_domain_entity() {
+    fn test_update_product_command_to_domain_entity() -> anyhow::Result<()> {
         let category_id = CategoryId::new();
         let category = Category::new(
             category_id,
@@ -55,7 +57,7 @@ mod tests {
             category.id().into(),
         );
         let product =
-            ProductMapper::map_update_product_command_to_domain_entity(&command, category).unwrap();
+            ProductMapper::map_update_product_command_to_domain_entity(&command, category)?;
 
         assert_eq!(product.id(), product_id);
         assert_eq!(product.title(), "product title");
@@ -66,5 +68,7 @@ mod tests {
         assert_eq!(product.category().id(), category_id);
         assert_eq!(product.category().title(), "category title");
         assert_eq!(product.category().description(), "category description");
+
+        Ok(())
     }
 }

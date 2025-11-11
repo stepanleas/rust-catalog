@@ -5,25 +5,25 @@ use actix_web::web::ServiceConfig;
 pub fn configure(cfg: &mut ServiceConfig) {
     cfg.service(
         web::scope("/api/categories")
-            .service(api::list_all_categories)
-            .service(api::find_one_category)
-            .service(api::create_category)
-            .service(api::update_category)
-            .service(api::delete_category),
+            .service(api::api_categories::list_all)
+            .service(api::api_categories::find_one)
+            .service(api::api_categories::create)
+            .service(api::api_categories::update)
+            .service(api::api_categories::delete),
     );
     cfg.service(
         web::scope("/api/products")
-            .service(api::list_all_products)
-            .service(api::find_one_product)
-            .service(api::create_product)
-            .service(api::update_product)
-            .service(api::delete_product),
+            .service(api::api_products::list_all)
+            .service(api::api_products::find_one)
+            .service(api::api_products::create)
+            .service(api::api_products::update)
+            .service(api::api_products::delete),
     );
     cfg.service(
         web::scope("/api/health")
-            .service(api::startup)
-            .service(api::ready)
-            .service(api::live),
+            .service(api::api_health_check::startup)
+            .service(api::api_health_check::ready)
+            .service(api::api_health_check::live),
     );
-    cfg.service(web::scope("/api/info").service(api::info));
+    cfg.service(web::scope("/api/info").service(api::api_info::info));
 }

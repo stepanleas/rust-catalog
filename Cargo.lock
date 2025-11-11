@@ -311,7 +311,6 @@ dependencies = [
  "anyhow",
  "config",
  "domain",
- "futures",
  "mockall",
  "serde",
  "shared",

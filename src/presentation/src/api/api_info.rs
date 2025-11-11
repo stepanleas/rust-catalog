@@ -1,4 +1,4 @@
-use crate::AppState;
+use crate::app_state::AppState;
 use crate::error::ApiError;
 use crate::responses::general::AppInfoResponse;
 use actix_web::{HttpRequest, HttpResponse, Responder, get, web};
