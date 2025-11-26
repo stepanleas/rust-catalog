@@ -27,6 +27,9 @@ cargo_clippy:
 cargo_test:
 	cargo test --workspace --all-features -- --nocapture
 
+cargo_test_coverage:
+	cargo llvm-cov --workspace --all-features
+
 cargo_clean:
 	rm -rf ~/.cargo/registry/index/*
 

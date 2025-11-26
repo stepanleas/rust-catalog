@@ -34,7 +34,7 @@ mod tests {
 
         mock_repository
             .expect_list_all()
-            .times(1)
+            .once()
             .returning(move || Ok(expected_categories.clone()));
 
         let handler = ListAllCategoryQueryHandler::new(Arc::new(mock_repository));
@@ -64,7 +64,7 @@ mod tests {
         mock_repository
             .expect_find_by_id()
             .with(predicate::eq(category_id))
-            .times(1)
+            .once()
             .returning(move |_| {
                 Ok(Category::new(
                     category_id,
@@ -94,7 +94,7 @@ mod tests {
 
         mock_repository
             .expect_save()
-            .times(1)
+            .once()
             .withf(move |category: &Category| {
                 category.title() == "Books"
                     && category.description() == "A category for all book products"
@@ -126,7 +126,7 @@ mod tests {
 
         mock_repository
             .expect_save()
-            .times(1)
+            .once()
             .withf(move |category: &Category| {
                 category.id() == CategoryId::from_uuid(category_id)
                     && category.title() == "Books"
@@ -159,10 +159,7 @@ mod tests {
 
         let command = DeleteCategoryCommand::new(Uuid::new_v4());
 
-        mock_repository
-            .expect_delete()
-            .times(1)
-            .returning(|_| Ok(()));
+        mock_repository.expect_delete().once().returning(|_| Ok(()));
 
         let handler = DeleteCategoryCommandHandler::new(Arc::new(mock_repository));
 

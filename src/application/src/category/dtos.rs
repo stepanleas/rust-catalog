@@ -1,7 +1,7 @@
 use domain::entities::Category;
 use uuid::Uuid;
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct CategoryDto {
     id: Uuid,
     title: String,

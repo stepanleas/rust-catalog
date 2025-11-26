@@ -24,13 +24,11 @@ mod tests {
         let url = format!("postgres://postgres:postgres@127.0.0.1:{}/postgres", port);
 
         let db_pool = configure(url).await?;
-        let category_repository = PostgresCategoryRepository::new(&db_pool);
-        let product_repository = PostgresProductRepository::new(&db_pool);
 
         Ok(TestContext {
             _container: container,
-            category_repository,
-            product_repository,
+            category_repository: PostgresCategoryRepository::new(&db_pool),
+            product_repository: PostgresProductRepository::new(&db_pool),
         })
     }
 

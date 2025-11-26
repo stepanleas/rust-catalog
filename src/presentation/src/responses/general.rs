@@ -28,7 +28,7 @@ impl AppInfoResponse {
 }
 
 #[readonly::make]
-#[derive(Serialize, Deserialize, ToSchema)]
+#[derive(Default, Serialize, Deserialize, ToSchema)]
 pub struct HealthCheckResponse {
     pub status: String,
 }
@@ -38,11 +38,5 @@ impl HealthCheckResponse {
         Self {
             status: OK_STATUS.to_string(),
         }
-    }
-}
-
-impl Default for HealthCheckResponse {
-    fn default() -> Self {
-        Self::new()
     }
 }

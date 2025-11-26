@@ -53,7 +53,7 @@ mod tests {
 
         mock_repository
             .expect_list_all()
-            .times(1)
+            .once()
             .returning(move || Ok(expected_products.clone()));
 
         let handler = ListAllProductQueryHandler::new(Arc::new(mock_repository));
@@ -106,8 +106,8 @@ mod tests {
 
         mock_repository
             .expect_find_by_id()
+            .once()
             .with(predicate::eq(product_id))
-            .times(1)
             .returning(move |_| Ok(expected_product.clone()));
 
         let handler = FindProductQueryHandler::new(Arc::new(mock_repository));
@@ -134,12 +134,12 @@ mod tests {
         let mut mock_product_repository = MockProductRepository::new();
         let mut mock_message_publisher = MockProductMessagePublisher::new();
 
-        let category_id = Uuid::new_v4();
+        let category_id = CategoryId::new();
 
         mock_category_repository
             .expect_find_by_id()
-            .with(predicate::eq(CategoryId::from_uuid(category_id)))
-            .times(1)
+            .once()
+            .with(predicate::eq(category_id))
             .returning(move |_| {
                 Ok(Category::new(
                     CategoryId::new(),
@@ -150,7 +150,7 @@ mod tests {
 
         mock_product_repository
             .expect_save()
-            .times(1)
+            .once()
             .withf(move |product| {
                 product.title() == "Laptop"
                     && product.description() == "A high-performance laptop"
@@ -163,7 +163,7 @@ mod tests {
 
         mock_message_publisher
             .expect_publish_created()
-            .times(1)
+            .once()
             .withf(|event| {
                 event.product().title() == "Laptop"
                     && event.product().description() == "A high-performance laptop"
@@ -179,7 +179,7 @@ mod tests {
             "A high-performance laptop".to_string(),
             15,
             30.5,
-            category_id,
+            *category_id.as_uuid(),
         );
 
         let handler = CreateProductCommandHandler::new(
@@ -204,18 +204,68 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_update_product_command_handler_execute() -> anyhow::Result<()> {
+    async fn test_create_product_command_handler_execute_with_non_existent_category()
+    -> anyhow::Result<()> {
         let mut mock_category_repository = MockCategoryRepository::new();
         let mut mock_product_repository = MockProductRepository::new();
         let mut mock_message_publisher = MockProductMessagePublisher::new();
 
-        let product_id = Uuid::new_v4();
-        let category_id = Uuid::new_v4();
+        let category_id = CategoryId::new();
 
         mock_category_repository
             .expect_find_by_id()
-            .with(predicate::eq(CategoryId::from_uuid(category_id)))
-            .times(1)
+            .once()
+            .with(predicate::eq(category_id))
+            .returning(move |_| {
+                Err(anyhow::anyhow!(
+                    "Category with id {:?} not found",
+                    category_id.as_uuid(),
+                ))
+            });
+
+        mock_product_repository.expect_save().never();
+
+        mock_message_publisher.expect_publish_created().never();
+
+        let command = CreateProductCommand::new(
+            "Laptop".to_string(),
+            "A high-performance laptop".to_string(),
+            15,
+            30.5,
+            *category_id.as_uuid(),
+        );
+
+        let handler = CreateProductCommandHandler::new(
+            Arc::new(mock_product_repository),
+            Arc::new(mock_category_repository),
+            Arc::new(mock_message_publisher),
+        );
+
+        let result = handler.execute(command).await;
+        assert!(result.is_err());
+
+        let message = result.unwrap_err().to_string();
+        assert!(
+            message.contains(
+                format!("Category with id {:?} not found", category_id.as_uuid()).as_str(),
+            )
+        );
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_create_product_command_handler_execute_with_failed_save() -> anyhow::Result<()> {
+        let mut mock_category_repository = MockCategoryRepository::new();
+        let mut mock_product_repository = MockProductRepository::new();
+        let mut mock_message_publisher = MockProductMessagePublisher::new();
+
+        let category_id = CategoryId::new();
+
+        mock_category_repository
+            .expect_find_by_id()
+            .once()
+            .with(predicate::eq(category_id))
             .returning(move |_| {
                 Ok(Category::new(
                     CategoryId::new(),
@@ -226,7 +276,149 @@ mod tests {
 
         mock_product_repository
             .expect_save()
-            .times(1)
+            .once()
+            .withf(move |product| {
+                product.title() == "Laptop"
+                    && product.description() == "A high-performance laptop"
+                    && product.quantity() == 15
+                    && product.price() == &Money::from_f64(30.5).unwrap()
+                    && product.category().title() == "Electronics"
+                    && product.category().description() == "Electronic devices and gadgets"
+            })
+            .returning(move |_| {
+                Err(anyhow::anyhow!(
+                    "Failed to save product to the repository",
+                ))
+            });
+
+        mock_message_publisher
+            .expect_publish_created()
+            .never();
+
+        let command = CreateProductCommand::new(
+            "Laptop".to_string(),
+            "A high-performance laptop".to_string(),
+            15,
+            30.5,
+            *category_id.as_uuid(),
+        );
+
+        let handler = CreateProductCommandHandler::new(
+            Arc::new(mock_product_repository),
+            Arc::new(mock_category_repository),
+            Arc::new(mock_message_publisher),
+        );
+
+        let result = handler.execute(command).await;
+        assert!(result.is_err());
+
+        let message = result.unwrap_err().to_string();
+        assert!(
+            message.contains("Failed to save product to the repository"),
+        );
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_create_product_command_handler_execute_with_failed_publish() -> anyhow::Result<()> {
+        let mut mock_category_repository = MockCategoryRepository::new();
+        let mut mock_product_repository = MockProductRepository::new();
+        let mut mock_message_publisher = MockProductMessagePublisher::new();
+
+        let category_id = CategoryId::new();
+
+        mock_category_repository
+            .expect_find_by_id()
+            .once()
+            .with(predicate::eq(category_id))
+            .returning(move |_| {
+                Ok(Category::new(
+                    CategoryId::new(),
+                    "Electronics".to_string(),
+                    "Electronic devices and gadgets".to_string(),
+                ))
+            });
+
+        mock_product_repository
+            .expect_save()
+            .once()
+            .withf(move |product| {
+                product.title() == "Laptop"
+                    && product.description() == "A high-performance laptop"
+                    && product.quantity() == 15
+                    && product.price() == &Money::from_f64(30.5).unwrap()
+                    && product.category().title() == "Electronics"
+                    && product.category().description() == "Electronic devices and gadgets"
+            })
+            .returning(Ok);
+
+        mock_message_publisher
+            .expect_publish_created()
+            .once()
+            .withf(|event| {
+                event.product().title() == "Laptop"
+                    && event.product().description() == "A high-performance laptop"
+                    && event.product().quantity() == 15
+                    && event.product().price() == &Money::from_f64(30.5).unwrap()
+                    && event.product().category().title() == "Electronics"
+                    && event.product().category().description() == "Electronic devices and gadgets"
+            })
+            .returning(move |_| {
+                Err(anyhow::anyhow!(
+                    "Failed to publish product created event",
+                ))
+            });
+
+        let command = CreateProductCommand::new(
+            "Laptop".to_string(),
+            "A high-performance laptop".to_string(),
+            15,
+            30.5,
+            *category_id.as_uuid(),
+        );
+
+        let handler = CreateProductCommandHandler::new(
+            Arc::new(mock_product_repository),
+            Arc::new(mock_category_repository),
+            Arc::new(mock_message_publisher),
+        );
+
+        let result = handler.execute(command).await;
+        assert!(result.is_err());
+
+        let message = result.unwrap_err().to_string();
+        assert!(
+            message.contains("Failed to publish product created event"),
+        );
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_update_product_command_handler_execute() -> anyhow::Result<()> {
+        let mut mock_category_repository = MockCategoryRepository::new();
+        let mut mock_product_repository = MockProductRepository::new();
+        let mut mock_message_publisher = MockProductMessagePublisher::new();
+
+        let product_id = Uuid::new_v4();
+        let category_id = Uuid::new_v4();
+
+        mock_category_repository
+            .expect_find_by_id()
+            .once()
+            .with(predicate::eq(CategoryId::from_uuid(category_id)))
+            .returning(move |_| {
+                Ok(Category::new(
+                    CategoryId::new(),
+                    "Electronics".to_string(),
+                    "Electronic devices and gadgets".to_string(),
+                ))
+            });
+
+        mock_product_repository
+            .expect_save()
+            .once()
             .withf(move |product| {
                 product.id() == ProductId::from_uuid(product_id)
                     && product.title() == "Laptop"
@@ -240,7 +432,7 @@ mod tests {
 
         mock_message_publisher
             .expect_publish_updated()
-            .times(1)
+            .once()
             .withf(move |event| {
                 event.product().id() == ProductId::from_uuid(product_id)
                     && event.product().title() == "Laptop"
@@ -291,13 +483,11 @@ mod tests {
 
         let command = DeleteProductCommand::new(product_id);
 
-        mock_repository
-            .expect_delete()
-            .times(1)
-            .returning(|_| Ok(()));
+        mock_repository.expect_delete().once().returning(|_| Ok(()));
+
         mock_message_publisher
             .expect_publish_deleted()
-            .times(1)
+            .once()
             .withf(move |event| event.product_id() == ProductId::from_uuid(product_id))
             .returning(|_| Ok(()));
 

@@ -60,4 +60,4 @@ kafka = "0.10"
 apache-avro = "0.20.0"
 
 # Shared
-shared = { git = "https://github.com/stepanleas/rust-shared.git", tag = "1.3.9" }
+shared = { git = "https://github.com/stepanleas/rust-shared.git", tag = "1.0.0" }

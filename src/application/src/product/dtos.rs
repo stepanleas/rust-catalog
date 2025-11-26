@@ -3,6 +3,7 @@ use domain::entities::Product;
 use shared::domain::value_objects::Money;
 use uuid::Uuid;
 
+#[derive(Debug)]
 pub struct ProductDto {
     id: Uuid,
     title: String,

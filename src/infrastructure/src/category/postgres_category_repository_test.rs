@@ -20,11 +20,10 @@ mod tests {
         let url = format!("postgres://postgres:postgres@127.0.0.1:{}/postgres", port);
 
         let db_pool = configure(url).await?;
-        let repository = PostgresCategoryRepository::new(&db_pool);
 
         Ok(TestContext {
             _container: container,
-            repository,
+            repository: PostgresCategoryRepository::new(&db_pool),
         })
     }
 
@@ -62,7 +61,7 @@ mod tests {
 
         let id = CategoryId::new();
         let category = Category::new(id, "category title".into(), "category description".into());
-        ctx.repository.save(category.clone())?;
+        ctx.repository.save(category)?;
 
         let saved_category = ctx.repository.find_by_id(id)?;
         assert_eq!(saved_category.id(), id);
@@ -88,7 +87,7 @@ mod tests {
             .title("updated category title")
             .description("updated category description")
             .build();
-        ctx.repository.save(updated_category.clone())?;
+        ctx.repository.save(updated_category)?;
 
         let saved_category = ctx.repository.find_by_id(id)?;
         assert_eq!(saved_category.id(), id);
@@ -105,7 +104,7 @@ mod tests {
         let id = CategoryId::new();
         let category = Category::new(id, "category title".into(), "category description".into());
 
-        ctx.repository.save(category.clone())?;
+        ctx.repository.save(category)?;
         ctx.repository.delete(id)?;
 
         let saved_category = ctx.repository.find_by_id(id);
