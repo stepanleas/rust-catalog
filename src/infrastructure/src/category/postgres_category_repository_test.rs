@@ -45,12 +45,12 @@ mod tests {
         ctx.repository.save(second_category)?;
 
         let categories = ctx.repository.list_all()?;
-        assert_eq!(categories.len(), 2);
+        assert_eq!(2, categories.len());
 
-        assert_eq!(categories[0].title(), "category title 1");
-        assert_eq!(categories[0].description(), "category description 1");
-        assert_eq!(categories[1].title(), "category title 2");
-        assert_eq!(categories[1].description(), "category description 2");
+        assert_eq!("category title 1", categories[0].title());
+        assert_eq!("category description 1", categories[0].description());
+        assert_eq!("category title 2", categories[1].title());
+        assert_eq!("category description 2", categories[1].description());
 
         Ok(())
     }
@@ -59,14 +59,18 @@ mod tests {
     async fn test_create_category() -> anyhow::Result<()> {
         let ctx = setup_context().await?;
 
-        let id = CategoryId::new();
-        let category = Category::new(id, "category title".into(), "category description".into());
+        let category_id = CategoryId::new();
+        let category = Category::new(
+            category_id,
+            "category title".into(),
+            "category description".into(),
+        );
         ctx.repository.save(category)?;
 
-        let saved_category = ctx.repository.find_by_id(id)?;
-        assert_eq!(saved_category.id(), id);
-        assert_eq!(saved_category.title(), "category title");
-        assert_eq!(saved_category.description(), "category description");
+        let saved_category = ctx.repository.find_by_id(category_id)?;
+        assert_eq!(category_id, saved_category.id());
+        assert_eq!("category title", saved_category.title());
+        assert_eq!("category description", saved_category.description());
 
         Ok(())
     }
@@ -75,24 +79,24 @@ mod tests {
     async fn test_update_category() -> anyhow::Result<()> {
         let ctx = setup_context().await?;
 
-        let id = CategoryId::new();
+        let category_id = CategoryId::new();
         ctx.repository.save(Category::new(
-            id,
+            category_id,
             "category title".into(),
             "category description".into(),
         ))?;
 
         let updated_category = Category::builder()
-            .id(id)
+            .id(category_id)
             .title("updated category title")
             .description("updated category description")
             .build();
         ctx.repository.save(updated_category)?;
 
-        let saved_category = ctx.repository.find_by_id(id)?;
-        assert_eq!(saved_category.id(), id);
-        assert_eq!(saved_category.title(), "updated category title");
-        assert_eq!(saved_category.description(), "updated category description");
+        let saved_category = ctx.repository.find_by_id(category_id)?;
+        assert_eq!(category_id, saved_category.id());
+        assert_eq!("updated category title", saved_category.title());
+        assert_eq!("updated category description", saved_category.description());
 
         Ok(())
     }
@@ -101,13 +105,17 @@ mod tests {
     async fn test_delete_category() -> anyhow::Result<()> {
         let ctx = setup_context().await?;
 
-        let id = CategoryId::new();
-        let category = Category::new(id, "category title".into(), "category description".into());
+        let category_id = CategoryId::new();
+        let category = Category::new(
+            category_id,
+            "category title".into(),
+            "category description".into(),
+        );
 
         ctx.repository.save(category)?;
-        ctx.repository.delete(id)?;
+        ctx.repository.delete(category_id)?;
 
-        let saved_category = ctx.repository.find_by_id(id);
+        let saved_category = ctx.repository.find_by_id(category_id);
 
         assert!(matches!(
             saved_category.err().unwrap().downcast_ref::<DomainError>(),

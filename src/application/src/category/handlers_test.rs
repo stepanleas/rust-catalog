@@ -40,16 +40,16 @@ mod tests {
         let handler = ListAllCategoryQueryHandler::new(Arc::new(mock_repository));
         let category_dtos = handler.execute().await?;
 
-        assert_eq!(category_dtos.len(), 2);
-        assert_eq!(category_dtos[0].title(), "Books");
+        assert_eq!(2, category_dtos.len());
+        assert_eq!("Books", category_dtos[0].title());
         assert_eq!(
+            "A category for all book products",
             category_dtos[0].description(),
-            "A category for all book products"
         );
-        assert_eq!(category_dtos[1].title(), "Electronics");
+        assert_eq!("Electronics", category_dtos[1].title());
         assert_eq!(
+            "A category for all electronic products",
             category_dtos[1].description(),
-            "A category for all electronic products"
         );
 
         Ok(())
@@ -79,10 +79,10 @@ mod tests {
             .execute(FindCategoryQuery::new(Option::from(*category_id.as_uuid())))
             .await?;
 
-        assert_eq!(category_dto.title(), "Books");
+        assert_eq!("Books", category_dto.title());
         assert_eq!(
-            category_dto.description(),
             "A category for all book products",
+            category_dto.description(),
         );
 
         Ok(())
@@ -109,10 +109,10 @@ mod tests {
         );
         let category_dto = handler.execute(command).await?;
 
-        assert_eq!(category_dto.title(), "Books");
+        assert_eq!("Books", category_dto.title());
         assert_eq!(
+            "A category for all book products",
             category_dto.description(),
-            "A category for all book products"
         );
 
         Ok(())
@@ -143,11 +143,11 @@ mod tests {
         );
         let category_dto = handler.execute(command).await?;
 
-        assert_eq!(category_dto.id(), category_id);
-        assert_eq!(category_dto.title(), "Books");
+        assert_eq!(category_id, category_dto.id());
+        assert_eq!("Books", category_dto.title());
         assert_eq!(
+            "A category for all book products",
             category_dto.description(),
-            "A category for all book products"
         );
 
         Ok(())

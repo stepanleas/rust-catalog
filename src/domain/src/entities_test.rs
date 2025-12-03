@@ -4,7 +4,7 @@ mod tests {
     use shared::domain::value_objects::{CategoryId, Money, ProductId};
 
     #[test]
-    fn test_new_category() {
+    fn test_new_category() -> anyhow::Result<()> {
         let category_id = CategoryId::new();
         let category = Category::new(
             category_id,
@@ -12,13 +12,15 @@ mod tests {
             "Category description".into(),
         );
 
-        assert_eq!(category.id(), category_id);
-        assert_eq!(category.title(), "Category title");
-        assert_eq!(category.description(), "Category description");
+        assert_eq!(category_id, category.id());
+        assert_eq!("Category title", category.title());
+        assert_eq!("Category description", category.description());
+
+        Ok(())
     }
 
     #[test]
-    fn test_new_product() {
+    fn test_new_product() -> anyhow::Result<()> {
         let category_id = CategoryId::new();
         let category = Category::new(
             category_id,
@@ -36,14 +38,16 @@ mod tests {
             category,
         );
 
-        assert_eq!(product.id(), product_id);
-        assert_eq!(product.title(), "Product title");
-        assert_eq!(product.description(), "Product description");
-        assert_eq!(product.quantity(), 5);
-        assert_eq!(product.price(), &Money::from_f64(15.5).unwrap());
+        assert_eq!(product_id, product.id());
+        assert_eq!("Product title", product.title());
+        assert_eq!("Product description", product.description());
+        assert_eq!(5, product.quantity());
+        assert_eq!(&Money::from_f64(15.5)?, product.price());
 
-        assert_eq!(product.category().id(), category_id);
-        assert_eq!(product.category().title(), "Category title");
-        assert_eq!(product.category().description(), "Category description");
+        assert_eq!(category_id, product.category().id());
+        assert_eq!("Category title", product.category().title());
+        assert_eq!("Category description", product.category().description());
+
+        Ok(())
     }
 }

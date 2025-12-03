@@ -59,9 +59,9 @@ mod tests {
         let handler = ListAllProductQueryHandler::new(Arc::new(mock_repository));
         let product_dtos = handler.execute().await?;
 
-        assert_eq!(product_dtos.len(), 2);
+        assert_eq!(2, product_dtos.len());
 
-        assert_eq!(product_dtos[0].title(), "Laptop");
+        assert_eq!("Laptop", product_dtos[0].title());
         assert_eq!(product_dtos[0].description(), "A high-performance laptop");
         assert_eq!(product_dtos[0].quantity(), 15);
         assert_eq!(product_dtos[0].price(), &Money::from_f64(30.5)?);
@@ -245,10 +245,9 @@ mod tests {
         assert!(result.is_err());
 
         let message = result.unwrap_err().to_string();
-        assert!(
-            message.contains(
-                format!("Category with id {:?} not found", category_id.as_uuid()).as_str(),
-            )
+        assert_eq!(
+            format!("Category with id {:?} not found", category_id.as_uuid()).as_str(),
+            message
         );
 
         Ok(())
@@ -285,15 +284,9 @@ mod tests {
                     && product.category().title() == "Electronics"
                     && product.category().description() == "Electronic devices and gadgets"
             })
-            .returning(move |_| {
-                Err(anyhow::anyhow!(
-                    "Failed to save product to the repository",
-                ))
-            });
+            .returning(move |_| Err(anyhow::anyhow!("Failed to save product to the repository",)));
 
-        mock_message_publisher
-            .expect_publish_created()
-            .never();
+        mock_message_publisher.expect_publish_created().never();
 
         let command = CreateProductCommand::new(
             "Laptop".to_string(),
@@ -313,15 +306,14 @@ mod tests {
         assert!(result.is_err());
 
         let message = result.unwrap_err().to_string();
-        assert!(
-            message.contains("Failed to save product to the repository"),
-        );
+        assert_eq!("Failed to save product to the repository", message);
 
         Ok(())
     }
 
     #[tokio::test]
-    async fn test_create_product_command_handler_execute_with_failed_publish() -> anyhow::Result<()> {
+    async fn test_create_product_command_handler_execute_with_failed_publish() -> anyhow::Result<()>
+    {
         let mut mock_category_repository = MockCategoryRepository::new();
         let mut mock_product_repository = MockProductRepository::new();
         let mut mock_message_publisher = MockProductMessagePublisher::new();
@@ -364,11 +356,7 @@ mod tests {
                     && event.product().category().title() == "Electronics"
                     && event.product().category().description() == "Electronic devices and gadgets"
             })
-            .returning(move |_| {
-                Err(anyhow::anyhow!(
-                    "Failed to publish product created event",
-                ))
-            });
+            .returning(move |_| Err(anyhow::anyhow!("Failed to publish product created event",)));
 
         let command = CreateProductCommand::new(
             "Laptop".to_string(),
@@ -388,9 +376,7 @@ mod tests {
         assert!(result.is_err());
 
         let message = result.unwrap_err().to_string();
-        assert!(
-            message.contains("Failed to publish product created event"),
-        );
+        assert_eq!("Failed to publish product created event", message);
 
         Ok(())
     }

@@ -25,15 +25,15 @@ mod tests {
         let product =
             ProductMapper::map_create_product_command_to_domain_entity(&command, category)?;
 
-        assert_ne!(product.id().as_uuid().to_string(), Uuid::nil().to_string());
-        assert_eq!(product.title(), "product title");
-        assert_eq!(product.description(), "product description");
-        assert_eq!(product.quantity(), 10);
-        assert_eq!(product.price(), &Money::from_f64(25.5).unwrap());
+        assert_ne!(Uuid::nil().to_string(), product.id().as_uuid().to_string());
+        assert_eq!("product title", product.title());
+        assert_eq!("product description", product.description());
+        assert_eq!(10, product.quantity());
+        assert_eq!(&Money::from_f64(25.5)?, product.price());
 
-        assert_eq!(product.category().id(), category_id);
-        assert_eq!(product.category().title(), "category title");
-        assert_eq!(product.category().description(), "category description");
+        assert_eq!(category_id, product.category().id());
+        assert_eq!("category title", product.category().title());
+        assert_eq!("category description", product.category().description());
 
         Ok(())
     }
@@ -59,15 +59,15 @@ mod tests {
         let product =
             ProductMapper::map_update_product_command_to_domain_entity(&command, category)?;
 
-        assert_eq!(product.id(), product_id);
-        assert_eq!(product.title(), "product title");
-        assert_eq!(product.description(), "product description");
-        assert_eq!(product.quantity(), 10);
-        assert_eq!(product.price(), &Money::from_f64(25.5).unwrap());
+        assert_eq!(product_id, product.id());
+        assert_eq!("product title", product.title());
+        assert_eq!("product description", product.description());
+        assert_eq!(10, product.quantity());
+        assert_eq!(&Money::from_f64(25.5)?, product.price());
 
-        assert_eq!(product.category().id(), category_id);
-        assert_eq!(product.category().title(), "category title");
-        assert_eq!(product.category().description(), "category description");
+        assert_eq!(category_id, product.category().id());
+        assert_eq!("category title", product.category().title());
+        assert_eq!("category description", product.category().description());
 
         Ok(())
     }

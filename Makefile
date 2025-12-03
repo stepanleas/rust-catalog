@@ -33,4 +33,4 @@ cargo_test_coverage:
 cargo_clean:
 	rm -rf ~/.cargo/registry/index/*
 
-cargo_all_checks: cargo_fmt_check cargo_fix cargo_clippy cargo_test
+cargo_all_checks: cargo_clean cargo_fmt_check cargo_fix cargo_clippy cargo_test

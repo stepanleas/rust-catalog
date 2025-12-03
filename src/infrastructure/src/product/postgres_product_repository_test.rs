@@ -79,12 +79,12 @@ mod tests {
         ctx.product_repository.save(second_product)?;
 
         let products = ctx.product_repository.list_all()?;
-        assert_eq!(products.len(), 2);
+        assert_eq!(2, products.len());
 
-        assert_eq!(products[0].title(), "first product title");
-        assert_eq!(products[0].description(), "first product description");
-        assert_eq!(products[1].title(), "second product title");
-        assert_eq!(products[1].description(), "second product description");
+        assert_eq!("first product title", products[0].title());
+        assert_eq!("first product description", products[0].description());
+        assert_eq!("second product title", products[1].title());
+        assert_eq!("second product description", products[1].description());
 
         Ok(())
     }
@@ -117,19 +117,19 @@ mod tests {
         let saved_product = repository.find_by_id(product_id)?;
 
         assert_ne!(
-            saved_product.id().as_uuid().to_string(),
             Uuid::nil().to_string(),
+            saved_product.id().as_uuid().to_string(),
         );
-        assert_eq!(saved_product.title(), "product title");
-        assert_eq!(saved_product.description(), "product description");
-        assert_eq!(saved_product.quantity(), 10);
-        assert_eq!(saved_product.price(), &Money::from_f64(25.5)?);
+        assert_eq!("product title", saved_product.title());
+        assert_eq!("product description", saved_product.description());
+        assert_eq!(10, saved_product.quantity());
+        assert_eq!(&Money::from_f64(25.5)?, saved_product.price());
 
-        assert_eq!(saved_product.category().id(), category_id);
-        assert_eq!(saved_product.category().title(), "category title");
+        assert_eq!(category_id, saved_product.category().id());
+        assert_eq!("category title", saved_product.category().title());
         assert_eq!(
-            saved_product.category().description(),
             "category description",
+            saved_product.category().description(),
         );
 
         Ok(())
@@ -171,19 +171,19 @@ mod tests {
         ctx.product_repository.save(updated_product.clone())?;
 
         assert_ne!(
-            updated_product.id().as_uuid().to_string(),
             Uuid::nil().to_string(),
+            updated_product.id().as_uuid().to_string(),
         );
-        assert_eq!(updated_product.title(), "updated product title");
-        assert_eq!(updated_product.description(), "updated product description");
-        assert_eq!(updated_product.quantity(), 20);
-        assert_eq!(updated_product.price(), &Money::from_f64(30.0)?);
+        assert_eq!("updated product title", updated_product.title());
+        assert_eq!("updated product description", updated_product.description());
+        assert_eq!(20, updated_product.quantity());
+        assert_eq!(&Money::from_f64(30.0)?, updated_product.price());
 
-        assert_eq!(updated_product.category().id(), category_id);
-        assert_eq!(updated_product.category().title(), "category title");
+        assert_eq!(category_id, updated_product.category().id());
+        assert_eq!("category title", updated_product.category().title());
         assert_eq!(
-            updated_product.category().description(),
             "category description",
+            updated_product.category().description(),
         );
 
         Ok(())
