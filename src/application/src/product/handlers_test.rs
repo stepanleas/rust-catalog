@@ -62,23 +62,23 @@ mod tests {
         assert_eq!(2, product_dtos.len());
 
         assert_eq!("Laptop", product_dtos[0].title());
-        assert_eq!(product_dtos[0].description(), "A high-performance laptop");
-        assert_eq!(product_dtos[0].quantity(), 15);
-        assert_eq!(product_dtos[0].price(), &Money::from_f64(30.5)?);
-        assert_eq!(product_dtos[0].category().title(), "Electronics");
+        assert_eq!("A high-performance laptop", product_dtos[0].description());
+        assert_eq!(15, product_dtos[0].quantity());
+        assert_eq!("30.5", product_dtos[0].price().to_string());
+        assert_eq!("Electronics", product_dtos[0].category().title());
         assert_eq!(
-            product_dtos[0].category().description(),
             "Electronic devices and gadgets",
+            product_dtos[0].category().description(),
         );
 
-        assert_eq!(product_dtos[1].title(), "Smartphone");
-        assert_eq!(product_dtos[1].description(), "A latest model smartphone");
-        assert_eq!(product_dtos[1].quantity(), 7);
-        assert_eq!(product_dtos[1].price(), &Money::from_f64(13.75)?);
-        assert_eq!(product_dtos[1].category().title(), "Home Appliances");
+        assert_eq!("Smartphone", product_dtos[1].title());
+        assert_eq!("A latest model smartphone", product_dtos[1].description());
+        assert_eq!(7, product_dtos[1].quantity());
+        assert_eq!("13.75", product_dtos[1].price().to_string());
+        assert_eq!("Home Appliances", product_dtos[1].category().title());
         assert_eq!(
-            product_dtos[1].category().description(),
             "Appliances for home use",
+            product_dtos[1].category().description(),
         );
 
         Ok(())
@@ -115,14 +115,14 @@ mod tests {
             .execute(FindProductQuery::new(Option::from(*product_id.as_uuid())))
             .await?;
 
-        assert_eq!(product_dto.title(), "Laptop");
-        assert_eq!(product_dto.description(), "A high-performance laptop");
-        assert_eq!(product_dto.quantity(), 15);
-        assert_eq!(product_dto.price(), &Money::from_f64(30.5)?);
-        assert_eq!(product_dto.category().title(), "Electronics");
+        assert_eq!("Laptop", product_dto.title());
+        assert_eq!("A high-performance laptop", product_dto.description());
+        assert_eq!(15, product_dto.quantity());
+        assert_eq!("30.5", product_dto.price().to_string());
+        assert_eq!("Electronics", product_dto.category().title());
         assert_eq!(
-            product_dto.category().description(),
             "Electronic devices and gadgets",
+            product_dto.category().description(),
         );
 
         Ok(())
@@ -155,7 +155,7 @@ mod tests {
                 product.title() == "Laptop"
                     && product.description() == "A high-performance laptop"
                     && product.quantity() == 15
-                    && product.price() == &Money::from_f64(30.5).unwrap()
+                    && product.price().to_string() == "30.5"
                     && product.category().title() == "Electronics"
                     && product.category().description() == "Electronic devices and gadgets"
             })
@@ -168,7 +168,7 @@ mod tests {
                 event.product().title() == "Laptop"
                     && event.product().description() == "A high-performance laptop"
                     && event.product().quantity() == 15
-                    && event.product().price() == &Money::from_f64(30.5).unwrap()
+                    && event.product().price().to_string() == "30.5"
                     && event.product().category().title() == "Electronics"
                     && event.product().category().description() == "Electronic devices and gadgets"
             })
@@ -189,15 +189,15 @@ mod tests {
         );
 
         let product_dto = handler.execute(command).await?;
-        assert_eq!(product_dto.title(), "Laptop");
-        assert_eq!(product_dto.description(), "A high-performance laptop");
-        assert_eq!(product_dto.quantity(), 15);
-        assert_eq!(product_dto.price(), &Money::from_f64(30.5)?);
+        assert_eq!("Laptop", product_dto.title());
+        assert_eq!("A high-performance laptop", product_dto.description());
+        assert_eq!(15, product_dto.quantity());
+        assert_eq!("30.5", product_dto.price().to_string());
 
-        assert_eq!(product_dto.category().title(), "Electronics");
+        assert_eq!("Electronics", product_dto.category().title());
         assert_eq!(
-            product_dto.category().description(),
             "Electronic devices and gadgets",
+            product_dto.category().description(),
         );
 
         Ok(())
@@ -280,7 +280,7 @@ mod tests {
                 product.title() == "Laptop"
                     && product.description() == "A high-performance laptop"
                     && product.quantity() == 15
-                    && product.price() == &Money::from_f64(30.5).unwrap()
+                    && product.price().to_string() == "30.5"
                     && product.category().title() == "Electronics"
                     && product.category().description() == "Electronic devices and gadgets"
             })
@@ -339,7 +339,7 @@ mod tests {
                 product.title() == "Laptop"
                     && product.description() == "A high-performance laptop"
                     && product.quantity() == 15
-                    && product.price() == &Money::from_f64(30.5).unwrap()
+                    && product.price().to_string() == "30.5"
                     && product.category().title() == "Electronics"
                     && product.category().description() == "Electronic devices and gadgets"
             })
@@ -352,7 +352,7 @@ mod tests {
                 event.product().title() == "Laptop"
                     && event.product().description() == "A high-performance laptop"
                     && event.product().quantity() == 15
-                    && event.product().price() == &Money::from_f64(30.5).unwrap()
+                    && event.product().price().to_string() == "30.5"
                     && event.product().category().title() == "Electronics"
                     && event.product().category().description() == "Electronic devices and gadgets"
             })
@@ -410,7 +410,7 @@ mod tests {
                     && product.title() == "Laptop"
                     && product.description() == "A high-performance laptop"
                     && product.quantity() == 15
-                    && product.price() == &Money::from_f64(30.5).unwrap()
+                    && product.price().to_string() == "30.5"
                     && product.category().title() == "Electronics"
                     && product.category().description() == "Electronic devices and gadgets"
             })
@@ -424,7 +424,7 @@ mod tests {
                     && event.product().title() == "Laptop"
                     && event.product().description() == "A high-performance laptop"
                     && event.product().quantity() == 15
-                    && event.product().price() == &Money::from_f64(30.5).unwrap()
+                    && event.product().price().to_string() == "30.5"
                     && event.product().category().title() == "Electronics"
                     && event.product().category().description() == "Electronic devices and gadgets"
             })
@@ -446,15 +446,15 @@ mod tests {
         );
 
         let product_dto = handler.execute(command).await?;
-        assert_eq!(product_dto.title(), "Laptop");
-        assert_eq!(product_dto.description(), "A high-performance laptop");
-        assert_eq!(product_dto.quantity(), 15);
-        assert_eq!(product_dto.price(), &Money::from_f64(30.5)?);
+        assert_eq!("Laptop", product_dto.title());
+        assert_eq!("A high-performance laptop", product_dto.description());
+        assert_eq!(15, product_dto.quantity());
+        assert_eq!("30.5", product_dto.price().to_string());
 
-        assert_eq!(product_dto.category().title(), "Electronics");
+        assert_eq!("Electronics", product_dto.category().title());
         assert_eq!(
-            product_dto.category().description(),
             "Electronic devices and gadgets",
+            product_dto.category().description(),
         );
 
         Ok(())

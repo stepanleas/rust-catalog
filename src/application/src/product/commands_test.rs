@@ -16,11 +16,11 @@ mod tests {
             category_id,
         );
 
-        assert_eq!(command.title(), "Test Product");
-        assert_eq!(command.description(), "A product for testing");
-        assert_eq!(command.quantity(), 10);
-        assert_eq!(command.price(), 99.99);
-        assert_eq!(command.category_id(), category_id);
+        assert_eq!("Test Product", command.title());
+        assert_eq!("A product for testing", command.description());
+        assert_eq!(10, command.quantity());
+        assert_eq!(99.99, command.price());
+        assert_eq!(category_id, command.category_id());
     }
 
     #[test]
@@ -36,12 +36,12 @@ mod tests {
             category_id,
         );
 
-        assert_eq!(command.id(), product_id);
-        assert_eq!(command.title(), "Test Product");
-        assert_eq!(command.description(), "A product for testing");
-        assert_eq!(command.quantity(), 10);
-        assert_eq!(command.price(), 99.99);
-        assert_eq!(command.category_id(), category_id);
+        assert_eq!(product_id, command.id());
+        assert_eq!("Test Product", command.title());
+        assert_eq!("A product for testing", command.description());
+        assert_eq!(10, command.quantity());
+        assert_eq!(99.99, command.price());
+        assert_eq!(category_id, command.category_id());
     }
 
     #[test]

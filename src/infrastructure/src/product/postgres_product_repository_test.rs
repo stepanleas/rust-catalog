@@ -123,7 +123,7 @@ mod tests {
         assert_eq!("product title", saved_product.title());
         assert_eq!("product description", saved_product.description());
         assert_eq!(10, saved_product.quantity());
-        assert_eq!(&Money::from_f64(25.5)?, saved_product.price());
+        assert_eq!("25.50", saved_product.price().to_string());
 
         assert_eq!(category_id, saved_product.category().id());
         assert_eq!("category title", saved_product.category().title());
@@ -177,7 +177,7 @@ mod tests {
         assert_eq!("updated product title", updated_product.title());
         assert_eq!("updated product description", updated_product.description());
         assert_eq!(20, updated_product.quantity());
-        assert_eq!(&Money::from_f64(30.0)?, updated_product.price());
+        assert_eq!("30", updated_product.price().to_string());
 
         assert_eq!(category_id, updated_product.category().id());
         assert_eq!("category title", updated_product.category().title());

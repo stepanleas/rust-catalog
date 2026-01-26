@@ -11,8 +11,8 @@ mod tests {
             "A category for all book products".to_string(),
         );
 
-        assert_eq!(command.title(), "Books");
-        assert_eq!(command.description(), "A category for all book products");
+        assert_eq!("Books", command.title());
+        assert_eq!("A category for all book products", command.description());
     }
 
     #[test]
@@ -24,9 +24,9 @@ mod tests {
             "A category for all book products".to_string(),
         );
 
-        assert_eq!(command.id(), category_id);
-        assert_eq!(command.title(), "Books");
-        assert_eq!(command.description(), "A category for all book products");
+        assert_eq!(category_id, command.id());
+        assert_eq!("Books", command.title());
+        assert_eq!("A category for all book products", command.description());
     }
 
     #[test]

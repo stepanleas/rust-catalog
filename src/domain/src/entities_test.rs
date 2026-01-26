@@ -42,7 +42,7 @@ mod tests {
         assert_eq!("Product title", product.title());
         assert_eq!("Product description", product.description());
         assert_eq!(5, product.quantity());
-        assert_eq!(&Money::from_f64(15.5)?, product.price());
+        assert_eq!("15.5", product.price().to_string());
 
         assert_eq!(category_id, product.category().id());
         assert_eq!("Category title", product.category().title());

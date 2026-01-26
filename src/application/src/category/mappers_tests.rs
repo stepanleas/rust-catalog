@@ -11,9 +11,9 @@ mod tests {
             CreateCategoryCommand::new("category title".into(), "category description".into());
         let category = CategoryMapper::map_create_category_command_to_domain_entity(&command);
 
-        assert_ne!(category.id().as_uuid().to_string(), Uuid::nil().to_string());
-        assert_eq!(category.title(), "category title");
-        assert_eq!(category.description(), "category description");
+        assert_ne!(Uuid::nil().to_string(), category.id().as_uuid().to_string());
+        assert_eq!("category title", category.title());
+        assert_eq!("category description", category.description());
     }
 
     #[test]
@@ -26,8 +26,8 @@ mod tests {
         );
         let category = CategoryMapper::map_update_category_command_to_domain_entity(&command);
 
-        assert_eq!(category.id(), category_id);
-        assert_eq!(category.title(), "category title");
-        assert_eq!(category.description(), "category description");
+        assert_eq!(category_id, category.id());
+        assert_eq!("category title", category.title());
+        assert_eq!("category description", category.description());
     }
 }

@@ -3,7 +3,7 @@ mod tests {
     use crate::product::commands::{CreateProductCommand, UpdateProductCommand};
     use crate::product::mappers::ProductMapper;
     use domain::entities::Category;
-    use shared::domain::value_objects::{CategoryId, Money, ProductId};
+    use shared::domain::value_objects::{CategoryId, ProductId};
     use uuid::Uuid;
 
     #[test]
@@ -29,7 +29,7 @@ mod tests {
         assert_eq!("product title", product.title());
         assert_eq!("product description", product.description());
         assert_eq!(10, product.quantity());
-        assert_eq!(&Money::from_f64(25.5)?, product.price());
+        assert_eq!("25.5", product.price().to_string());
 
         assert_eq!(category_id, product.category().id());
         assert_eq!("category title", product.category().title());
@@ -63,7 +63,7 @@ mod tests {
         assert_eq!("product title", product.title());
         assert_eq!("product description", product.description());
         assert_eq!(10, product.quantity());
-        assert_eq!(&Money::from_f64(25.5)?, product.price());
+        assert_eq!("25.5", product.price().to_string());
 
         assert_eq!(category_id, product.category().id());
         assert_eq!("category title", product.category().title());
