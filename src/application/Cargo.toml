@@ -7,7 +7,6 @@ edition = "2024"
 serde.workspace = true
 uuid.workspace = true
 anyhow.workspace = true
-config.workspace = true
 mockall.workspace = true
 tokio.workspace = true
 shared.workspace = true

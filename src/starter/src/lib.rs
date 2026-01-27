@@ -17,8 +17,7 @@ use utoipa_actix_web::AppExt;
 use utoipa_swagger_ui::SwaggerUi;
 
 pub async fn run() -> Result<Server> {
-    let settings = Settings::default().load()?;
-    run_internal(&settings).await
+    run_internal(&Settings::new()).await
 }
 
 async fn run_internal(settings: &Settings) -> Result<Server> {

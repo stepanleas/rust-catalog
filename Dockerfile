@@ -21,5 +21,4 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 COPY --from=builder /app/app /usr/local/bin/
-COPY ./configuration ./configuration
 ENTRYPOINT ["/usr/local/bin/app"]
