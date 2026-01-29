@@ -1,6 +1,7 @@
 use crate::product::commands::{CreateProductCommand, UpdateProductCommand};
 use domain::entities::{Category, Product};
-use shared::domain::value_objects::{Money, ProductId};
+use rusty_money::{Money, iso};
+use shared::domain::value_objects::ProductId;
 
 pub struct ProductMapper;
 
@@ -9,7 +10,7 @@ impl ProductMapper {
         command: &CreateProductCommand,
         category: Category,
     ) -> anyhow::Result<Product> {
-        let price = Money::from_f64(command.price())?;
+        let price = Money::from_str(command.price(), iso::USD)?;
 
         let product = Product::builder()
             .id(ProductId::new())
@@ -27,7 +28,7 @@ impl ProductMapper {
         command: &UpdateProductCommand,
         category: Category,
     ) -> anyhow::Result<Product> {
-        let price = Money::from_f64(command.price())?;
+        let price = Money::from_str(command.price(), iso::USD)?;
 
         let product = Product::builder()
             .id(ProductId::from_uuid(command.id()))

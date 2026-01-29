@@ -77,7 +77,7 @@ pub async fn find_one(req: HttpRequest, id: Path<Uuid>) -> Result<impl Responder
     ),
     request_body = CreateProductRequest,
 )]
-#[post("/api/products")]
+#[post("")]
 pub async fn create(
     req: HttpRequest,
     request: ValidatedJson<CreateProductRequest>,
@@ -106,7 +106,7 @@ pub async fn create(
         payload.title.clone(),
         payload.description.clone(),
         payload.quantity,
-        payload.price,
+        payload.price.to_string(),
         payload.category_id,
     );
 
@@ -158,7 +158,7 @@ pub async fn update(
         payload.title.clone(),
         payload.description.clone(),
         payload.quantity,
-        payload.price,
+        payload.price.to_string(),
         payload.category_id,
     );
 

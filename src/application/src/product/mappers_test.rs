@@ -19,7 +19,7 @@ mod tests {
             "product title".to_string(),
             "product description".to_string(),
             10,
-            25.5,
+            "25.5".into(),
             category.id().into(),
         );
         let product =
@@ -29,7 +29,7 @@ mod tests {
         assert_eq!("product title", product.title());
         assert_eq!("product description", product.description());
         assert_eq!(10, product.quantity());
-        assert_eq!("25.5", product.price().to_string());
+        assert_eq!("$25.50", product.price().to_string());
 
         assert_eq!(category_id, product.category().id());
         assert_eq!("category title", product.category().title());
@@ -53,7 +53,7 @@ mod tests {
             "product title".to_string(),
             "product description".to_string(),
             10,
-            25.5,
+            "25.5".into(),
             category.id().into(),
         );
         let product =
@@ -63,7 +63,7 @@ mod tests {
         assert_eq!("product title", product.title());
         assert_eq!("product description", product.description());
         assert_eq!(10, product.quantity());
-        assert_eq!("25.5", product.price().to_string());
+        assert_eq!("$25.50", product.price().to_string());
 
         assert_eq!(category_id, product.category().id());
         assert_eq!("category title", product.category().title());

@@ -4,7 +4,7 @@ pub struct CreateProductCommand {
     title: String,
     description: String,
     quantity: i32,
-    price: f64,
+    price: String,
     category_id: Uuid,
 }
 
@@ -13,7 +13,7 @@ impl CreateProductCommand {
         title: String,
         description: String,
         quantity: i32,
-        price: f64,
+        price: String,
         category_id: Uuid,
     ) -> Self {
         CreateProductCommand {
@@ -37,8 +37,8 @@ impl CreateProductCommand {
         self.quantity
     }
 
-    pub fn price(&self) -> f64 {
-        self.price
+    pub fn price(&self) -> &str {
+        &self.price
     }
 
     pub fn category_id(&self) -> Uuid {
@@ -51,7 +51,7 @@ pub struct UpdateProductCommand {
     title: String,
     description: String,
     quantity: i32,
-    price: f64,
+    price: String,
     category_id: Uuid,
 }
 
@@ -61,7 +61,7 @@ impl UpdateProductCommand {
         title: String,
         description: String,
         quantity: i32,
-        price: f64,
+        price: String,
         category_id: Uuid,
     ) -> Self {
         UpdateProductCommand {
@@ -90,8 +90,8 @@ impl UpdateProductCommand {
         self.quantity
     }
 
-    pub fn price(&self) -> f64 {
-        self.price
+    pub fn price(&self) -> &str {
+        &self.price
     }
 
     pub fn category_id(&self) -> Uuid {

@@ -60,6 +60,7 @@ impl CreateProductCommandHandler {
         }
     }
 
+    // TODO: Add transactional outbox
     pub async fn execute(&self, command: CreateProductCommand) -> anyhow::Result<ProductDto> {
         let category = self
             .category_repository

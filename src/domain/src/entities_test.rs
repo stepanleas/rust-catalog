@@ -1,7 +1,8 @@
 #[cfg(test)]
 mod tests {
     use crate::entities::{Category, Product};
-    use shared::domain::value_objects::{CategoryId, Money, ProductId};
+    use rusty_money::{Money, iso};
+    use shared::domain::value_objects::{CategoryId, ProductId};
 
     #[test]
     fn test_new_category() -> anyhow::Result<()> {
@@ -34,7 +35,7 @@ mod tests {
             "Product title".into(),
             "Product description".into(),
             5,
-            Money::from_f64(15.5).unwrap(),
+            Money::from_str("15.5", iso::USD)?,
             category,
         );
 
@@ -42,7 +43,7 @@ mod tests {
         assert_eq!("Product title", product.title());
         assert_eq!("Product description", product.description());
         assert_eq!(5, product.quantity());
-        assert_eq!("15.5", product.price().to_string());
+        assert_eq!("$15.50", product.price().to_string());
 
         assert_eq!(category_id, product.category().id());
         assert_eq!("Category title", product.category().title());

@@ -16,9 +16,17 @@ impl Settings {
             environment: env::var("ENVIRONMENT").unwrap_or_else(|_| "development".to_string()),
             http_url: env::var("HTTP_URL").unwrap_or_else(|_| "127.0.0.1:8080".to_string()),
             service_name: env::var("SERVICE_NAME").unwrap_or_else(|_| "catalog_api".to_string()),
-            database_url: env::var("DATABASE_URL").unwrap_or_else(|_| "postgres://postgres:postgres@localhost:5432/catalog_db".to_string()),
+            database_url: env::var("DATABASE_URL").unwrap_or_else(|_| {
+                "postgres://postgres:postgres@localhost:5432/catalog_db".to_string()
+            }),
             kafka_host: env::var("KAFKA_HOST").unwrap_or_else(|_| "localhost:9092".to_string()),
         }
+    }
+}
+
+impl Default for Settings {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

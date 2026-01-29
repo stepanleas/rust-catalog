@@ -22,7 +22,7 @@ impl From<ProductDto> for ProductResponse {
             title: product.title().into(),
             description: product.description().into(),
             quantity: product.quantity(),
-            price: product.price().clone().value().to_string(),
+            price: product.price().to_string(),
             category: product.category().clone().into(),
         }
     }

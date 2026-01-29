@@ -1,6 +1,7 @@
 use crate::category::dtos::CategoryDto;
 use domain::entities::Product;
-use shared::domain::value_objects::Money;
+use rusty_money::Money;
+use rusty_money::iso::Currency;
 use uuid::Uuid;
 
 #[derive(Debug)]
@@ -9,7 +10,7 @@ pub struct ProductDto {
     title: String,
     description: String,
     quantity: i32,
-    price: Money,
+    price: Money<'static, Currency>,
     category: CategoryDto,
 }
 
@@ -30,7 +31,7 @@ impl ProductDto {
         self.quantity
     }
 
-    pub fn price(&self) -> &Money {
+    pub fn price(&self) -> &Money<'static, Currency> {
         &self.price
     }
 
@@ -46,7 +47,7 @@ impl From<Product> for ProductDto {
             title: product.title().into(),
             description: product.description().into(),
             quantity: product.quantity(),
-            price: product.price().clone(),
+            price: *product.price(),
             category: product.category().into(),
         }
     }

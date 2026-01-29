@@ -1,5 +1,7 @@
 use crate::entities::{Category, Product};
-use shared::domain::value_objects::{CategoryId, Money, ProductId};
+use rusty_money::iso::Currency;
+use rusty_money::{Money, iso};
+use shared::domain::value_objects::{CategoryId, ProductId};
 
 #[derive(Default)]
 pub struct CategoryBuilder {
@@ -29,14 +31,26 @@ impl CategoryBuilder {
     }
 }
 
-#[derive(Default)]
 pub struct ProductBuilder {
     id: ProductId,
     title: String,
     description: String,
     quantity: i32,
-    price: Money,
+    price: Money<'static, Currency>,
     category: Category,
+}
+
+impl Default for ProductBuilder {
+    fn default() -> Self {
+        Self {
+            id: ProductId::new(),
+            title: String::new(),
+            description: String::new(),
+            quantity: 0,
+            price: Money::from_minor(0, iso::USD),
+            category: Category::default(),
+        }
+    }
 }
 
 impl ProductBuilder {
@@ -60,7 +74,7 @@ impl ProductBuilder {
         self
     }
 
-    pub fn price(mut self, price: Money) -> Self {
+    pub fn price(mut self, price: Money<'static, Currency>) -> Self {
         self.price = price;
         self
     }

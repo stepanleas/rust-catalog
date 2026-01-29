@@ -13,7 +13,8 @@ mod tests {
     use crate::product::repositories::MockProductRepository;
     use domain::entities::{Category, Product};
     use mockall::predicate;
-    use shared::domain::value_objects::{CategoryId, Money, ProductId};
+    use rusty_money::{Money, iso};
+    use shared::domain::value_objects::{CategoryId, ProductId};
     use std::sync::Arc;
     use uuid::Uuid;
 
@@ -38,7 +39,7 @@ mod tests {
                 "Laptop".to_string(),
                 "A high-performance laptop".to_string(),
                 15,
-                Money::from_f64(30.5)?,
+                Money::from_str("30.5", iso::USD)?,
                 first_category,
             ),
             Product::new(
@@ -46,7 +47,7 @@ mod tests {
                 "Smartphone".to_string(),
                 "A latest model smartphone".to_string(),
                 7,
-                Money::from_f64(13.75)?,
+                Money::from_str("13.75", iso::USD)?,
                 second_category,
             ),
         ];
@@ -64,7 +65,7 @@ mod tests {
         assert_eq!("Laptop", product_dtos[0].title());
         assert_eq!("A high-performance laptop", product_dtos[0].description());
         assert_eq!(15, product_dtos[0].quantity());
-        assert_eq!("30.5", product_dtos[0].price().to_string());
+        assert_eq!("$30.50", product_dtos[0].price().to_string());
         assert_eq!("Electronics", product_dtos[0].category().title());
         assert_eq!(
             "Electronic devices and gadgets",
@@ -74,7 +75,7 @@ mod tests {
         assert_eq!("Smartphone", product_dtos[1].title());
         assert_eq!("A latest model smartphone", product_dtos[1].description());
         assert_eq!(7, product_dtos[1].quantity());
-        assert_eq!("13.75", product_dtos[1].price().to_string());
+        assert_eq!("$13.75", product_dtos[1].price().to_string());
         assert_eq!("Home Appliances", product_dtos[1].category().title());
         assert_eq!(
             "Appliances for home use",
@@ -100,7 +101,7 @@ mod tests {
             "Laptop".to_string(),
             "A high-performance laptop".to_string(),
             15,
-            Money::from_f64(30.5)?,
+            Money::from_str("30.5", iso::USD)?,
             category,
         );
 
@@ -118,7 +119,7 @@ mod tests {
         assert_eq!("Laptop", product_dto.title());
         assert_eq!("A high-performance laptop", product_dto.description());
         assert_eq!(15, product_dto.quantity());
-        assert_eq!("30.5", product_dto.price().to_string());
+        assert_eq!("$30.50", product_dto.price().to_string());
         assert_eq!("Electronics", product_dto.category().title());
         assert_eq!(
             "Electronic devices and gadgets",
@@ -155,7 +156,7 @@ mod tests {
                 product.title() == "Laptop"
                     && product.description() == "A high-performance laptop"
                     && product.quantity() == 15
-                    && product.price().to_string() == "30.5"
+                    && product.price().to_string() == "$30.50"
                     && product.category().title() == "Electronics"
                     && product.category().description() == "Electronic devices and gadgets"
             })
@@ -168,7 +169,7 @@ mod tests {
                 event.product().title() == "Laptop"
                     && event.product().description() == "A high-performance laptop"
                     && event.product().quantity() == 15
-                    && event.product().price().to_string() == "30.5"
+                    && event.product().price().to_string() == "$30.50"
                     && event.product().category().title() == "Electronics"
                     && event.product().category().description() == "Electronic devices and gadgets"
             })
@@ -178,7 +179,7 @@ mod tests {
             "Laptop".to_string(),
             "A high-performance laptop".to_string(),
             15,
-            30.5,
+            "30.5".into(),
             *category_id.as_uuid(),
         );
 
@@ -192,7 +193,7 @@ mod tests {
         assert_eq!("Laptop", product_dto.title());
         assert_eq!("A high-performance laptop", product_dto.description());
         assert_eq!(15, product_dto.quantity());
-        assert_eq!("30.5", product_dto.price().to_string());
+        assert_eq!("$30.50", product_dto.price().to_string());
 
         assert_eq!("Electronics", product_dto.category().title());
         assert_eq!(
@@ -231,7 +232,7 @@ mod tests {
             "Laptop".to_string(),
             "A high-performance laptop".to_string(),
             15,
-            30.5,
+            "30.5".into(),
             *category_id.as_uuid(),
         );
 
@@ -280,7 +281,7 @@ mod tests {
                 product.title() == "Laptop"
                     && product.description() == "A high-performance laptop"
                     && product.quantity() == 15
-                    && product.price().to_string() == "30.5"
+                    && product.price().to_string() == "$30.50"
                     && product.category().title() == "Electronics"
                     && product.category().description() == "Electronic devices and gadgets"
             })
@@ -292,7 +293,7 @@ mod tests {
             "Laptop".to_string(),
             "A high-performance laptop".to_string(),
             15,
-            30.5,
+            "30.5".into(),
             *category_id.as_uuid(),
         );
 
@@ -339,7 +340,7 @@ mod tests {
                 product.title() == "Laptop"
                     && product.description() == "A high-performance laptop"
                     && product.quantity() == 15
-                    && product.price().to_string() == "30.5"
+                    && product.price().to_string() == "$30.50"
                     && product.category().title() == "Electronics"
                     && product.category().description() == "Electronic devices and gadgets"
             })
@@ -352,7 +353,7 @@ mod tests {
                 event.product().title() == "Laptop"
                     && event.product().description() == "A high-performance laptop"
                     && event.product().quantity() == 15
-                    && event.product().price().to_string() == "30.5"
+                    && event.product().price().to_string() == "$30.50"
                     && event.product().category().title() == "Electronics"
                     && event.product().category().description() == "Electronic devices and gadgets"
             })
@@ -362,7 +363,7 @@ mod tests {
             "Laptop".to_string(),
             "A high-performance laptop".to_string(),
             15,
-            30.5,
+            "30.5".into(),
             *category_id.as_uuid(),
         );
 
@@ -410,7 +411,7 @@ mod tests {
                     && product.title() == "Laptop"
                     && product.description() == "A high-performance laptop"
                     && product.quantity() == 15
-                    && product.price().to_string() == "30.5"
+                    && product.price().to_string() == "$30.50"
                     && product.category().title() == "Electronics"
                     && product.category().description() == "Electronic devices and gadgets"
             })
@@ -424,7 +425,7 @@ mod tests {
                     && event.product().title() == "Laptop"
                     && event.product().description() == "A high-performance laptop"
                     && event.product().quantity() == 15
-                    && event.product().price().to_string() == "30.5"
+                    && event.product().price().to_string() == "$30.50"
                     && event.product().category().title() == "Electronics"
                     && event.product().category().description() == "Electronic devices and gadgets"
             })
@@ -435,7 +436,7 @@ mod tests {
             "Laptop".to_string(),
             "A high-performance laptop".to_string(),
             15,
-            30.5,
+            "30.5".into(),
             category_id,
         );
 
@@ -449,7 +450,7 @@ mod tests {
         assert_eq!("Laptop", product_dto.title());
         assert_eq!("A high-performance laptop", product_dto.description());
         assert_eq!(15, product_dto.quantity());
-        assert_eq!("30.5", product_dto.price().to_string());
+        assert_eq!("$30.50", product_dto.price().to_string());
 
         assert_eq!("Electronics", product_dto.category().title());
         assert_eq!(

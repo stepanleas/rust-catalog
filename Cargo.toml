@@ -55,6 +55,9 @@ chrono = { version = "0.4.43", default-features = false, features = ["clock"] }
 futures = "0.3.31"
 tokio = { version = "1.49.0", features = ["rt-multi-thread", "macros", "time", "sync"] }
 
+# Money
+rusty-money = "0.5.0"
+
 # Messaging
 kafka = "0.10.0"
 apache-avro = "0.21.0"

@@ -7,7 +7,8 @@ mod tests {
     use application::product::repositories::ProductRepository;
     use domain::entities::{Category, Product};
     use domain::error::DomainError;
-    use shared::domain::value_objects::{CategoryId, Money, ProductId};
+    use rusty_money::{Money, iso};
+    use shared::domain::value_objects::{CategoryId, ProductId};
     use testcontainers::runners::AsyncRunner;
     use testcontainers_modules::postgres::Postgres;
     use uuid::Uuid;
@@ -51,7 +52,7 @@ mod tests {
             "first product title".to_string(),
             "first product description".to_string(),
             10,
-            Money::from_f64(25.5)?,
+            Money::from_str("25.5", iso::USD)?,
             first_category,
         );
 
@@ -72,7 +73,7 @@ mod tests {
             "second product title".to_string(),
             "second product description".to_string(),
             10,
-            Money::from_f64(25.5)?,
+            Money::from_str("25.5", iso::USD)?,
             second_category,
         );
 
@@ -109,7 +110,7 @@ mod tests {
             "product title".to_string(),
             "product description".to_string(),
             10,
-            Money::from_f64(25.5)?,
+            Money::from_str("25.5", iso::USD)?,
             category,
         );
 
@@ -123,7 +124,7 @@ mod tests {
         assert_eq!("product title", saved_product.title());
         assert_eq!("product description", saved_product.description());
         assert_eq!(10, saved_product.quantity());
-        assert_eq!("25.50", saved_product.price().to_string());
+        assert_eq!("$25.50", saved_product.price().to_string());
 
         assert_eq!(category_id, saved_product.category().id());
         assert_eq!("category title", saved_product.category().title());
@@ -154,7 +155,7 @@ mod tests {
             "product title".to_string(),
             "product description".to_string(),
             10,
-            Money::from_f64(25.5)?,
+            Money::from_str("25.5", iso::USD)?,
             category,
         );
 
@@ -165,7 +166,7 @@ mod tests {
             .title("updated product title")
             .description("updated product description")
             .quantity(20)
-            .price(Money::from_f64(30.0)?)
+            .price(Money::from_str("30.0", iso::USD)?)
             .category(ctx.category_repository.find_by_id(category_id)?)
             .build();
         ctx.product_repository.save(updated_product.clone())?;
@@ -177,7 +178,7 @@ mod tests {
         assert_eq!("updated product title", updated_product.title());
         assert_eq!("updated product description", updated_product.description());
         assert_eq!(20, updated_product.quantity());
-        assert_eq!("30", updated_product.price().to_string());
+        assert_eq!("$30.00", updated_product.price().to_string());
 
         assert_eq!(category_id, updated_product.category().id());
         assert_eq!("category title", updated_product.category().title());
@@ -208,7 +209,7 @@ mod tests {
             "product title".to_string(),
             "product description".to_string(),
             10,
-            Money::from_f64(25.5)?,
+            Money::from_str("25.5", iso::USD)?,
             category,
         );
 

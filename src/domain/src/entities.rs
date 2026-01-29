@@ -1,5 +1,7 @@
 use crate::builders::{CategoryBuilder, ProductBuilder};
-use shared::domain::value_objects::{CategoryId, Money, ProductId};
+use rusty_money::Money;
+use rusty_money::iso::Currency;
+use shared::domain::value_objects::{CategoryId, ProductId};
 
 #[derive(Default, Clone, Debug, PartialEq)]
 pub struct Category {
@@ -40,7 +42,7 @@ pub struct Product {
     title: String,
     description: String,
     quantity: i32,
-    price: Money,
+    price: Money<'static, Currency>,
     category: Category,
 }
 
@@ -54,7 +56,7 @@ impl Product {
         title: String,
         description: String,
         quantity: i32,
-        price: Money,
+        price: Money<'static, Currency>,
         category: Category,
     ) -> Self {
         Product {
@@ -83,7 +85,7 @@ impl Product {
         self.quantity
     }
 
-    pub fn price(&self) -> &Money {
+    pub fn price(&self) -> &Money<'static, Currency> {
         &self.price
     }
 

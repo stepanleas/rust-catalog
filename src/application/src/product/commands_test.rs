@@ -12,14 +12,14 @@ mod tests {
             "Test Product".to_string(),
             "A product for testing".to_string(),
             10,
-            99.99,
+            "99.99".into(),
             category_id,
         );
 
         assert_eq!("Test Product", command.title());
         assert_eq!("A product for testing", command.description());
         assert_eq!(10, command.quantity());
-        assert_eq!(99.99, command.price());
+        assert_eq!("99.99", command.price().to_string());
         assert_eq!(category_id, command.category_id());
     }
 
@@ -32,7 +32,7 @@ mod tests {
             "Test Product".to_string(),
             "A product for testing".to_string(),
             10,
-            99.99,
+            "99.99".into(),
             category_id,
         );
 
@@ -40,7 +40,7 @@ mod tests {
         assert_eq!("Test Product", command.title());
         assert_eq!("A product for testing", command.description());
         assert_eq!(10, command.quantity());
-        assert_eq!(99.99, command.price());
+        assert_eq!("99.99", command.price().to_string());
         assert_eq!(category_id, command.category_id());
     }
 
