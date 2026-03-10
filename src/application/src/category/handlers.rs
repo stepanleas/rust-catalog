@@ -2,9 +2,9 @@ use crate::category::commands::{
     CreateCategoryCommand, DeleteCategoryCommand, UpdateCategoryCommand,
 };
 use crate::category::dtos::CategoryDto;
-use crate::category::mappers::CategoryMapper;
 use crate::category::queries::FindCategoryQuery;
 use crate::category::repositories::CategoryRepository;
+use domain::entities::Category;
 use shared::domain::value_objects::CategoryId;
 use std::sync::Arc;
 
@@ -50,7 +50,11 @@ impl CreateCategoryCommandHandler {
     }
 
     pub async fn execute(&self, command: CreateCategoryCommand) -> anyhow::Result<CategoryDto> {
-        let category = CategoryMapper::map_create_category_command_to_domain_entity(&command);
+        let category = Category::builder()
+            .id(CategoryId::new())
+            .title(command.title())
+            .description(command.description())
+            .build();
 
         self.repository.save(category).map(CategoryDto::from)
     }
@@ -66,7 +70,11 @@ impl UpdateCategoryCommandHandler {
     }
 
     pub async fn execute(&self, command: UpdateCategoryCommand) -> anyhow::Result<CategoryDto> {
-        let category = CategoryMapper::map_update_category_command_to_domain_entity(&command);
+        let category = Category::builder()
+            .id(CategoryId::from_uuid(command.id()))
+            .title(command.title())
+            .description(command.description())
+            .build();
 
         self.repository.save(category).map(CategoryDto::from)
     }

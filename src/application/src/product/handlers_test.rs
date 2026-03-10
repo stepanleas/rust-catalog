@@ -13,6 +13,7 @@ mod tests {
     use crate::product::repositories::MockProductRepository;
     use domain::entities::{Category, Product};
     use mockall::predicate;
+    use rust_decimal::dec;
     use rusty_money::{Money, iso};
     use shared::domain::value_objects::{CategoryId, ProductId};
     use std::sync::Arc;
@@ -39,7 +40,7 @@ mod tests {
                 "Laptop".to_string(),
                 "A high-performance laptop".to_string(),
                 15,
-                Money::from_str("30.5", iso::USD)?,
+                Money::from_decimal(dec!(30.5), iso::USD),
                 first_category,
             ),
             Product::new(
@@ -47,7 +48,7 @@ mod tests {
                 "Smartphone".to_string(),
                 "A latest model smartphone".to_string(),
                 7,
-                Money::from_str("13.75", iso::USD)?,
+                Money::from_decimal(dec!(13.75), iso::USD),
                 second_category,
             ),
         ];
@@ -179,7 +180,7 @@ mod tests {
             "Laptop".to_string(),
             "A high-performance laptop".to_string(),
             15,
-            "30.5".into(),
+            dec!(30.5),
             *category_id.as_uuid(),
         );
 
@@ -232,7 +233,7 @@ mod tests {
             "Laptop".to_string(),
             "A high-performance laptop".to_string(),
             15,
-            "30.5".into(),
+            dec!(30.5),
             *category_id.as_uuid(),
         );
 
@@ -293,7 +294,7 @@ mod tests {
             "Laptop".to_string(),
             "A high-performance laptop".to_string(),
             15,
-            "30.5".into(),
+            dec!(30.5),
             *category_id.as_uuid(),
         );
 
@@ -363,7 +364,7 @@ mod tests {
             "Laptop".to_string(),
             "A high-performance laptop".to_string(),
             15,
-            "30.5".into(),
+            dec!(30.5),
             *category_id.as_uuid(),
         );
 
@@ -436,7 +437,7 @@ mod tests {
             "Laptop".to_string(),
             "A high-performance laptop".to_string(),
             15,
-            "30.5".into(),
+            dec!(30.5),
             category_id,
         );
 

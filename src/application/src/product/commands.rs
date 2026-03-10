@@ -1,10 +1,11 @@
+use rust_decimal::Decimal;
 use uuid::Uuid;
 
 pub struct CreateProductCommand {
     title: String,
     description: String,
     quantity: i32,
-    price: String,
+    price: Decimal,
     category_id: Uuid,
 }
 
@@ -13,7 +14,7 @@ impl CreateProductCommand {
         title: String,
         description: String,
         quantity: i32,
-        price: String,
+        price: Decimal,
         category_id: Uuid,
     ) -> Self {
         CreateProductCommand {
@@ -37,8 +38,8 @@ impl CreateProductCommand {
         self.quantity
     }
 
-    pub fn price(&self) -> &str {
-        &self.price
+    pub fn price(&self) -> Decimal {
+        self.price
     }
 
     pub fn category_id(&self) -> Uuid {
@@ -51,7 +52,7 @@ pub struct UpdateProductCommand {
     title: String,
     description: String,
     quantity: i32,
-    price: String,
+    price: Decimal,
     category_id: Uuid,
 }
 
@@ -61,7 +62,7 @@ impl UpdateProductCommand {
         title: String,
         description: String,
         quantity: i32,
-        price: String,
+        price: Decimal,
         category_id: Uuid,
     ) -> Self {
         UpdateProductCommand {
@@ -90,8 +91,8 @@ impl UpdateProductCommand {
         self.quantity
     }
 
-    pub fn price(&self) -> &str {
-        &self.price
+    pub fn price(&self) -> Decimal {
+        self.price
     }
 
     pub fn category_id(&self) -> Uuid {

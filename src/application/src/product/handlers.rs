@@ -2,10 +2,11 @@ use crate::category::repositories::CategoryRepository;
 use crate::ports::output::publishers::ProductMessagePublisher;
 use crate::product::commands::{CreateProductCommand, DeleteProductCommand, UpdateProductCommand};
 use crate::product::dtos::ProductDto;
-use crate::product::mappers::ProductMapper;
 use crate::product::queries::FindProductQuery;
 use crate::product::repositories::ProductRepository;
+use domain::entities::Product;
 use domain::events::{ProductCreatedEvent, ProductDeletedEvent, ProductUpdatedEvent};
+use rusty_money::{Money, iso};
 use shared::domain::value_objects::{CategoryId, ProductId};
 use std::sync::Arc;
 
@@ -65,15 +66,26 @@ impl CreateProductCommandHandler {
         let category = self
             .category_repository
             .find_by_id(CategoryId::from_uuid(command.category_id()))?;
-        let product =
-            ProductMapper::map_create_product_command_to_domain_entity(&command, category)?;
 
-        let product = self.product_repository.save(product)?;
+        let product = Product::builder()
+            .id(ProductId::new())
+            .title(command.title())
+            .description(command.description())
+            .quantity(command.quantity())
+            .price(Money::from_decimal(command.price(), iso::USD))
+            .category(category)
+            .build();
+
+        let saved_product = self.product_repository.save(product)?;
+        tracing::info!(
+            "Product with id: {} created",
+            saved_product.id().as_uuid().to_string(),
+        );
 
         self.message_publisher
-            .publish_created(ProductCreatedEvent::new(product.clone()))?;
+            .publish_created(ProductCreatedEvent::new(saved_product.clone()))?;
 
-        Ok(ProductDto::from(product))
+        Ok(ProductDto::from(saved_product))
     }
 }
 
@@ -96,19 +108,31 @@ impl UpdateProductCommandHandler {
         }
     }
 
+    // TODO: Add transactional outbox
     pub async fn execute(&self, command: UpdateProductCommand) -> anyhow::Result<ProductDto> {
         let category = self
             .category_repository
             .find_by_id(CategoryId::from_uuid(command.category_id()))?;
-        let product =
-            ProductMapper::map_update_product_command_to_domain_entity(&command, category)?;
 
-        let product = self.product_repository.save(product)?;
+        let product = Product::builder()
+            .id(ProductId::from_uuid(command.id()))
+            .title(command.title())
+            .description(command.description())
+            .quantity(command.quantity())
+            .price(Money::from_decimal(command.price(), iso::USD))
+            .category(category)
+            .build();
+
+        let saved_product = self.product_repository.save(product)?;
+        tracing::info!(
+            "Product with id: {} updated",
+            saved_product.id().as_uuid().to_string(),
+        );
 
         self.message_publisher
-            .publish_updated(ProductUpdatedEvent::new(product.clone()))?;
+            .publish_updated(ProductUpdatedEvent::new(saved_product.clone()))?;
 
-        Ok(ProductDto::from(product))
+        Ok(ProductDto::from(saved_product))
     }
 }
 
@@ -128,10 +152,13 @@ impl DeleteProductCommandHandler {
         }
     }
 
+    // TODO: Add transactional outbox
     pub async fn execute(&self, command: DeleteProductCommand) -> anyhow::Result<()> {
         let product_id = ProductId::from_uuid(command.id());
 
         self.repository.delete(product_id)?;
+        tracing::info!("Product with id: {} deleted", command.id().to_string(),);
+
         self.message_publisher
             .publish_deleted(ProductDeletedEvent::new(product_id))
     }

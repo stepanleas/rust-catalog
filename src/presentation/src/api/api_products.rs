@@ -14,6 +14,8 @@ use application::product::handlers::{
     ListAllProductQueryHandler, UpdateProductCommandHandler,
 };
 use application::product::queries::FindProductQuery;
+use rust_decimal::Decimal;
+use rust_decimal::prelude::FromPrimitive;
 use serde_json::json;
 use uuid::Uuid;
 
@@ -86,7 +88,7 @@ pub async fn create(
         .extensions()
         .get::<String>()
         .cloned()
-        .unwrap_or_else(|| "unknown".to_string());
+        .unwrap_or("unknown".to_string());
 
     tracing::info!(%correlation_id, "Handling product create");
 
@@ -106,7 +108,7 @@ pub async fn create(
         payload.title.clone(),
         payload.description.clone(),
         payload.quantity,
-        payload.price.to_string(),
+        Decimal::from_f64(payload.price).expect("Invalid price value"),
         payload.category_id,
     );
 
@@ -137,7 +139,7 @@ pub async fn update(
         .extensions()
         .get::<String>()
         .cloned()
-        .unwrap_or_else(|| "unknown".to_string());
+        .unwrap_or("unknown".to_string());
 
     tracing::info!(%correlation_id, "Handling product update");
 
@@ -158,7 +160,7 @@ pub async fn update(
         payload.title.clone(),
         payload.description.clone(),
         payload.quantity,
-        payload.price.to_string(),
+        Decimal::from_f64(payload.price).expect("Invalid price value"),
         payload.category_id,
     );
 
@@ -184,7 +186,7 @@ pub async fn delete(req: HttpRequest, id: Path<Uuid>) -> Result<impl Responder, 
         .extensions()
         .get::<String>()
         .cloned()
-        .unwrap_or_else(|| "unknown".to_string());
+        .unwrap_or("unknown".to_string());
 
     tracing::info!(%correlation_id, "Handling product delete");
 

@@ -28,7 +28,7 @@ pub(crate) struct ProductEntity {
 impl ProductEntity {
     pub fn into_domain(self, category_entity: CategoryEntity) -> Product {
         let price = Money::from_str(self.price.to_string().as_str(), iso::USD)
-            .unwrap_or_else(|_| Money::from_minor(0, iso::USD));
+            .unwrap_or(Money::from_minor(0, iso::USD));
 
         Product::builder()
             .id(ProductId::from_uuid(self.id))
@@ -48,7 +48,7 @@ impl ProductEntity {
 impl From<Product> for ProductEntity {
     fn from(product: Product) -> Self {
         let price = BigDecimal::from_str(product.price().amount().to_string().as_str())
-            .unwrap_or_else(|_| BigDecimal::from(0));
+            .unwrap_or(BigDecimal::from(0));
 
         ProductEntity {
             id: product.id().into(),

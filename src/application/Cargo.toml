@@ -9,7 +9,9 @@ uuid.workspace = true
 anyhow.workspace = true
 mockall.workspace = true
 tokio.workspace = true
+tracing.workspace = true
 rusty-money.workspace = true
+rust_decimal.workspace = true
 shared.workspace = true
 
 domain = { path = "../domain" }
