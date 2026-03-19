@@ -1,4 +1,4 @@
-use domain::entities::Category;
+use domain::category::entity::Category;
 use uuid::Uuid;
 
 #[derive(Debug, Clone)]

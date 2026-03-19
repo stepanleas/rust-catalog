@@ -5,8 +5,9 @@ mod tests {
     use crate::product::postgres_product_repository::PostgresProductRepository;
     use application::category::repositories::CategoryRepository;
     use application::product::repositories::ProductRepository;
-    use domain::entities::{Category, Product};
+    use domain::category::entity::Category;
     use domain::error::DomainError;
+    use domain::product::entity::Product;
     use rusty_money::{Money, iso};
     use shared::domain::value_objects::{CategoryId, ProductId};
     use testcontainers::runners::AsyncRunner;

@@ -1,40 +1,8 @@
-use crate::builders::{CategoryBuilder, ProductBuilder};
+use crate::category::entity::Category;
+use crate::product::builder::ProductBuilder;
 use rusty_money::Money;
 use rusty_money::iso::Currency;
-use shared::domain::value_objects::{CategoryId, ProductId};
-
-#[derive(Default, Clone, Debug, PartialEq)]
-pub struct Category {
-    id: CategoryId,
-    title: String,
-    description: String,
-}
-
-impl Category {
-    pub fn builder() -> CategoryBuilder {
-        CategoryBuilder::default()
-    }
-
-    pub fn new(id: CategoryId, title: String, description: String) -> Self {
-        Category {
-            id,
-            title,
-            description,
-        }
-    }
-
-    pub fn id(&self) -> CategoryId {
-        self.id
-    }
-
-    pub fn title(&self) -> &str {
-        &self.title
-    }
-
-    pub fn description(&self) -> &str {
-        &self.description
-    }
-}
+use shared::domain::value_objects::ProductId;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Product {

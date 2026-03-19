@@ -5,7 +5,7 @@ use crate::schema::categories::id;
 use application::category::repositories::CategoryRepository;
 use diesel::ExpressionMethods;
 use diesel::{OptionalExtension, QueryDsl, RunQueryDsl};
-use domain::entities::Category;
+use domain::category::entity::Category;
 use domain::error::DomainError;
 use shared::domain::value_objects::CategoryId;
 

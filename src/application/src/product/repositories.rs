@@ -1,4 +1,4 @@
-use domain::entities::Product;
+use domain::product::entity::Product;
 use mockall::automock;
 use shared::domain::value_objects::ProductId;
 

@@ -7,8 +7,8 @@ use crate::product::entity::ProductEntity;
 use application::product::repositories::ProductRepository;
 use diesel::{ExpressionMethods, SelectableHelper};
 use diesel::{OptionalExtension, QueryDsl, RunQueryDsl};
-use domain::entities::Product;
 use domain::error::DomainError;
+use domain::product::entity::Product;
 use shared::domain::value_objects::ProductId;
 
 pub struct PostgresProductRepository {

@@ -1,5 +1,5 @@
 use crate::category::dtos::CategoryDto;
-use domain::entities::Product;
+use domain::product::entity::Product;
 use rusty_money::Money;
 use rusty_money::iso::Currency;
 use uuid::Uuid;

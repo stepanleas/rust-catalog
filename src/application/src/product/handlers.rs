@@ -4,8 +4,8 @@ use crate::product::commands::{CreateProductCommand, DeleteProductCommand, Updat
 use crate::product::dtos::ProductDto;
 use crate::product::queries::FindProductQuery;
 use crate::product::repositories::ProductRepository;
-use domain::entities::Product;
 use domain::events::{ProductCreatedEvent, ProductDeletedEvent, ProductUpdatedEvent};
+use domain::product::entity::Product;
 use rusty_money::{Money, iso};
 use shared::domain::value_objects::{CategoryId, ProductId};
 use std::sync::Arc;

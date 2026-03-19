@@ -9,7 +9,7 @@ mod tests {
     };
     use crate::category::queries::FindCategoryQuery;
     use crate::category::repositories::MockCategoryRepository;
-    use domain::entities::Category;
+    use domain::category::entity::Category;
     use mockall::predicate;
     use shared::domain::value_objects::CategoryId;
     use std::sync::Arc;

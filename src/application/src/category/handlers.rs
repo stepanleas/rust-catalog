@@ -4,7 +4,7 @@ use crate::category::commands::{
 use crate::category::dtos::CategoryDto;
 use crate::category::queries::FindCategoryQuery;
 use crate::category::repositories::CategoryRepository;
-use domain::entities::Category;
+use domain::category::entity::Category;
 use shared::domain::value_objects::CategoryId;
 use std::sync::Arc;
 

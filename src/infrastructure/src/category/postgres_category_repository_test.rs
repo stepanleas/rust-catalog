@@ -3,7 +3,7 @@ mod tests {
     use crate::category::postgres_category_repository::PostgresCategoryRepository;
     use crate::config::configure;
     use application::category::repositories::CategoryRepository;
-    use domain::entities::Category;
+    use domain::category::entity::Category;
     use domain::error::DomainError;
     use shared::domain::value_objects::CategoryId;
     use testcontainers::runners::AsyncRunner;

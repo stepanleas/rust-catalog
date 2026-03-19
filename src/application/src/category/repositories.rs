@@ -1,4 +1,4 @@
-use domain::entities::Category;
+use domain::category::entity::Category;
 use mockall::automock;
 use shared::domain::value_objects::CategoryId;
 

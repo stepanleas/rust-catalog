@@ -2,7 +2,7 @@ use crate::category::entity::CategoryEntity;
 use chrono::NaiveDateTime;
 use diesel::internal::derives::multiconnection::bigdecimal::BigDecimal;
 use diesel::{AsChangeset, Associations, Identifiable, Insertable, Queryable, Selectable};
-use domain::entities::Product;
+use domain::product::entity::Product;
 use rusty_money::{Money, iso};
 use shared::domain::value_objects::ProductId;
 use std::str::FromStr;

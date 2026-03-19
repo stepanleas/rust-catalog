@@ -1,7 +1,7 @@
-use crate::kafka::avro::models::{
-    AvroSerializable, ProductCreatedEventAvroModel, ProductDeletedEventAvroModel,
-    ProductUpdatedEventAvroModel,
-};
+use crate::kafka::avro::events::product_created_event_avro_model::ProductCreatedEventAvroModel;
+use crate::kafka::avro::events::product_deleted_event_avro_model::ProductDeletedEventAvroModel;
+use crate::kafka::avro::events::product_updated_event_avro_model::ProductUpdatedEventAvroModel;
+use crate::kafka::avro::models::AvroSerializable;
 use crate::kafka::producer::KafkaProducer;
 use anyhow::anyhow;
 use application::ports::output::publishers::ProductMessagePublisher;

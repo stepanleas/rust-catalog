@@ -11,7 +11,8 @@ mod tests {
     };
     use crate::product::queries::FindProductQuery;
     use crate::product::repositories::MockProductRepository;
-    use domain::entities::{Category, Product};
+    use domain::category::entity::Category;
+    use domain::product::entity::Product;
     use mockall::predicate;
     use rust_decimal::dec;
     use rusty_money::{Money, iso};
